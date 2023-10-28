@@ -41,6 +41,7 @@ class CurrencyApiService implements ApiInterface
     }
 
     /**
+     * @return array<string, string>
      * @throws RequestFailed
      */
     public function fetchExchangeRate(): array
@@ -62,7 +63,9 @@ class CurrencyApiService implements ApiInterface
                 previous: $exception
             );
         } catch (ConnectionException) {
-            return config('custom.fallback_currency_rate');
+            return [
+                //
+            ];
         }
     }
 }

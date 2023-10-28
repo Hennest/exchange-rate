@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hennest\ExchangeRate\Services;
 
 use Carbon\Carbon;
+use Closure;
 use Hennest\ExchangeRate\Contracts\CacheInterface;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Psr\SimpleCache\InvalidArgumentException;
@@ -20,6 +21,9 @@ class CacheService implements CacheInterface
     ) {
     }
 
+    /**
+     * @param string[] $cacheKey
+     */
     protected function cacheKey(array $cacheKey): string
     {
         return self::PREFIX . "." . implode('.', $cacheKey);
@@ -66,7 +70,10 @@ class CacheService implements CacheInterface
         );
     }
 
-    public function remember(array $cacheKey, callable $callback, ?int $cacheLifetimeInHours = null): mixed
+    /**
+     * @param Closure(): array<string, string> $callback
+     */
+    public function remember(array $cacheKey, Closure $callback, ?int $cacheLifetimeInHours = null): mixed
     {
         return $this->cache->remember(
             key: $this->cacheKey($cacheKey),

@@ -9,6 +9,7 @@ use Hennest\ExchangeRate\Exceptions\RequestFailed;
 interface ApiInterface
 {
     /**
+     * @return array<string, string>
      * @throws RequestFailed
      */
     public function fetchExchangeRate(): array;

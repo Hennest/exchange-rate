@@ -12,6 +12,9 @@ use Hennest\ExchangeRate\Exceptions\RequestFailed;
 interface ExchangeRateInterface
 {
     /**
+     *
+     * @param string[] $currencies
+     * @return array<string, string>
      * @throws RequestFailed
      * @throws InvalidCurrency
      */

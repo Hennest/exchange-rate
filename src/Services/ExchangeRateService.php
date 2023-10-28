@@ -58,7 +58,7 @@ class ExchangeRateService implements ExchangeRateInterface
      */
     public function getRate(string $currency): float
     {
-        return $this->rates([$currency])[$currency];
+        return (float) $this->rates([$currency])[$currency];
     }
 
     /**

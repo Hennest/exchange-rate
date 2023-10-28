@@ -48,6 +48,7 @@
     "require-dev": {
         "laravel/pint": "^1.13",
         "orchestra/testbench": "^8.14",
-        "pestphp/pest": "^2.24"
+        "pestphp/pest": "^2.24",
+        "phpstan/phpstan": "^1.10"
     }
 }

@@ -17,16 +17,23 @@ use Illuminate\Support\ServiceProvider;
 
 class ExchangeRateServiceProvider extends ServiceProvider
 {
+    public function boot(): void
+    {
+        $this->publishes([
+            __DIR__ . '/../config/exchange-rate.php' => config_path('exchange-rate.php'),
+        ], 'exchange-rate-config');
+    }
+
     public function register(): void
     {
         /**
          * @var array{
          *     cache?: array{driver: string|null},
          *     services?: array{
-         *         api: <class-string|null>,
-         *         cache: <class-string|null>,
-         *         parser: <class-string|null>,
-         *         exchange_rate: <class-string|null>,
+         *         api: class-string|null,
+         *         cache: class-string|null,
+         *         parser: class-string|null,
+         *         exchange_rate: class-string|null,
          *     },
          * } $configure
          */
@@ -44,17 +51,17 @@ class ExchangeRateServiceProvider extends ServiceProvider
                     ]
                 );
             });
-        $this->app->bind(
+        $this->app->singleton(
             abstract: CacheInterface::class,
             concrete: $configure['services']['cache'] ?? CacheService::class
         );
 
-        $this->app->bind(
+        $this->app->singleton(
             abstract: ApiInterface::class,
             concrete: $configure['services']['api'] ?? CurrencyApiService::class
         );
 
-        $this->app->bind(
+        $this->app->singleton(
             abstract: ParserInterface::class,
             concrete: $configure['services']['parser'] ?? ParserService::class
         );

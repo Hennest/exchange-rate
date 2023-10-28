@@ -21,7 +21,7 @@ class ParserService implements ParserInterface
 
             if ( ! array_key_exists($currencyLower, $exchangeRate)) {
                 throw new InvalidCurrency(
-                    "Exchange rate data for currency '$currency' is not available."
+                    message: "Exchange rate data for currency '$currency' is not available."
                 );
             }
 
