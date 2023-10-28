@@ -3,11 +3,6 @@
     "description": "Exchange rate provider for laravel apps",
     "type": "library",
     "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Hennest\\ExchangeRate\\": "src/"
-        }
-    },
     "authors": [
         {
             "role": "Developer",
@@ -15,9 +10,30 @@
             "email": "ernestuwadiegwu@gmail.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Hennest\\ExchangeRate\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Hennest\\ExchangeRate\\Tests\\": "tests/"
+        }
+    },
     "require": {
         "php": "^8.1",
+        "guzzlehttp/guzzle": "^7.8",
         "illuminate/support": "^10.29"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Hennest\\ExchangeRate\\Providers\\ExchangeRateServiceProvider"
+            ],
+            "aliases": [
+                "Hennest\\ExchangeRate\\Facades\\ExchangeRate"
+            ]
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Hennest\ExchangeRate\Tests\ExchangeRateTestCase;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -13,7 +15,7 @@ declare(strict_types=1);
 |
 */
 
-// uses(Tests\TestCase::class)->in('Feature');
+uses(ExchangeRateTestCase::class)->in(__DIR__);
 
 /*
 |--------------------------------------------------------------------------
