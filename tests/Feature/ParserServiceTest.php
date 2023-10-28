@@ -19,8 +19,8 @@ it('returns correct format', function (): void {
         'gbp' => 0.72,
     ];
 
-    $result = $exchangeRateParser->parseExchangeRate(
-        exchangeRate: $exchangeRateApi->fetchExchangeRate(),
+    $result = $exchangeRateParser->parse(
+        exchangeRate: $exchangeRateApi->fetch(),
         toCurrencies: ['usd', 'eur', 'gbp']
     );
 
@@ -39,8 +39,8 @@ it('ignores unsupported currency', function (): void {
         'gbp' => 0.72,
     ];
 
-    $result = $exchangeRateParser->parseExchangeRate(
-        exchangeRate: $exchangeRateApi->fetchExchangeRate(),
+    $result = $exchangeRateParser->parse(
+        exchangeRate: $exchangeRateApi->fetch(),
         toCurrencies: ['usd', 'eur', 'gbp']
     );
 
@@ -56,7 +56,7 @@ it('throws exception when currency is unavailable', function (): void {
     ];
     $toCurrencies = ['GBP'];
 
-    expect(fn () => $exchangeRateParser->parseExchangeRate($exchangeRate, $toCurrencies))->toThrow(
+    expect(fn () => $exchangeRateParser->parse($exchangeRate, $toCurrencies))->toThrow(
         exception: InvalidCurrency::class,
         exceptionMessage: "Exchange rate data for currency 'GBP' is not available."
     );

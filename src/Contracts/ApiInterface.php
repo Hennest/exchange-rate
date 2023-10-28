@@ -12,5 +12,5 @@ interface ApiInterface
      * @return array<string, string>
      * @throws RequestFailed
      */
-    public function fetchExchangeRate(): array;
+    public function fetch(): array;
 }

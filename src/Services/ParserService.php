@@ -12,7 +12,7 @@ class ParserService implements ParserInterface
     /**
      * @throws InvalidCurrency
      */
-    public function parseExchangeRate(array $exchangeRate, array $toCurrencies): array
+    public function parse(array $exchangeRate, array $toCurrencies): array
     {
         $result = [];
 

@@ -44,7 +44,7 @@ class CurrencyApiService implements ApiInterface
      * @return array<string, string>
      * @throws RequestFailed
      */
-    public function fetchExchangeRate(): array
+    public function fetch(): array
     {
         try {
             return Http::retry(

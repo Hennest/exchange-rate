@@ -14,5 +14,5 @@ interface ParserInterface
      * @return array<string, string>
      * @throws InvalidCurrency
      */
-    public function parseExchangeRate(array $exchangeRate, array $toCurrencies): array;
+    public function parse(array $exchangeRate, array $toCurrencies): array;
 }

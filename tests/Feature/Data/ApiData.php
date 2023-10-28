@@ -8,7 +8,7 @@ use Hennest\ExchangeRate\Contracts\ApiInterface;
 
 class ApiData implements ApiInterface
 {
-    public function fetchExchangeRate(): array
+    public function fetch(): array
     {
         return [
             'usd' => 1.0,

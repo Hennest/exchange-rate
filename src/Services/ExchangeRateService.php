@@ -33,23 +33,20 @@ class ExchangeRateService implements ExchangeRateInterface
     public function rates(array $currencies): array
     {
         if ($value = $this->cache->get($currencies)) {
-            return $this->parser->parseExchangeRate(
-                exchangeRate: $value,
-                toCurrencies: $currencies
-            );
+            return $value;
         }
 
-        $exchangeRate = $this->api->fetchExchangeRate();
+        $exchangeRates = $this->parser->parse(
+            exchangeRate: $this->api->fetch(),
+            toCurrencies: $currencies
+        );
 
         $this->cache->put(
             cacheKey: $currencies,
-            value: $exchangeRate,
+            value: $exchangeRates,
         );
 
-        return $this->parser->parseExchangeRate(
-            exchangeRate: $exchangeRate,
-            toCurrencies: $currencies
-        );
+        return $exchangeRates;
     }
 
     /**

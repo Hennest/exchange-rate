@@ -12,7 +12,7 @@ it('fetches exchange rate with valid currency', function (): void {
 
     $exchangeRateApi = app(ApiInterface::class);
 
-    $exchangeRates = $exchangeRateApi->fetchExchangeRate();
+    $exchangeRates = $exchangeRateApi->fetch();
 
     expect($exchangeRates)->toBe([
         'usd' => 1.0,
@@ -26,6 +26,6 @@ it('throws an exception if it fails to fetch exchange rate', function (): void {
 
     $exchangeRateApi = app(ApiInterface::class);
 
-    expect(fn () => $exchangeRateApi->fetchExchangeRate())->toThrow(RequestFailed::class);
+    expect(fn () => $exchangeRateApi->fetch())->toThrow(RequestFailed::class);
 
 })->group('exchangeApi');
