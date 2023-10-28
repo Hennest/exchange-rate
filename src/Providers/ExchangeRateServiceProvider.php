@@ -19,9 +19,16 @@ class ExchangeRateServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
+        $config = __DIR__ . '/../../config/exchange-rate.php';
+
         $this->publishes([
-            __DIR__ . '/../config/exchange-rate.php' => config_path('exchange-rate.php'),
+            $config => config_path('exchange-rate.php'),
         ], 'exchange-rate-config');
+
+        $this->mergeConfigFrom(
+            $config,
+            'exchange-rate'
+        );
     }
 
     public function register(): void
