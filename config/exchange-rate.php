@@ -15,10 +15,13 @@ return [
     ],
 
     /**
-     * Storage of the state of the balance of wallets.
+     * Storage of the state of the exchange rates.
+     *
+     * Supported drivers: same as laravel cache
+     *
      */
     'cache' => [
-        'driver' => 'array',
+        'driver' => 'file',
         'ttl' => 6 * 3600,
     ],
 

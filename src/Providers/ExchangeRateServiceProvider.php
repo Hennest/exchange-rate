@@ -13,6 +13,7 @@ use Hennest\ExchangeRate\Services\CacheService;
 use Hennest\ExchangeRate\Services\ExchangeRateService;
 use Hennest\ExchangeRate\Services\ParserService;
 use Illuminate\Contracts\Cache\Factory as CacheFactory;
+use Illuminate\Contracts\Cache\Repository as CacheContract;
 use Illuminate\Support\ServiceProvider;
 
 class ExchangeRateServiceProvider extends ServiceProvider
@@ -46,18 +47,14 @@ class ExchangeRateServiceProvider extends ServiceProvider
          */
         $configure = config('exchange-rate', []);
 
-        $this->app->when($configure['services']['exchange_rate'] ?? ExchangeRateService::class)
-            ->needs(CacheInterface::class)
+        $this->app->when($configure['services']['cache'] ?? CacheService::class)
+            ->needs(CacheContract::class)
             ->give(function () use ($configure) {
-                return $this->app->make(
-                    abstract: CacheInterface::class,
-                    parameters: [
-                        'cache' => clone $this->app
-                            ->make(CacheFactory::class)
-                            ->store($configure['cache'] ?? 'array'),
-                    ]
-                );
+                return clone $this->app
+                    ->make(CacheFactory::class)
+                    ->store($configure['cache']['driver'] ?? 'array');
             });
+
         $this->app->singleton(
             abstract: CacheInterface::class,
             concrete: $configure['services']['cache'] ?? CacheService::class
@@ -73,12 +70,9 @@ class ExchangeRateServiceProvider extends ServiceProvider
             concrete: $configure['services']['parser'] ?? ParserService::class
         );
 
-        $this->app->singleton(ExchangeRateInterface::class, function () {
-            return new ExchangeRateService(
-                $this->app->make(CacheInterface::class),
-                $this->app->make(ApiInterface::class),
-                $this->app->make(ParserInterface::class),
-            );
-        });
+        $this->app->singleton(
+            abstract: ExchangeRateInterface::class,
+            concrete: $configure['services']['exchange_rate'] ?? ExchangeRateService::class
+        );
     }
 }

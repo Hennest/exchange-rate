@@ -7,7 +7,7 @@ namespace Hennest\ExchangeRate\Services;
 use Carbon\Carbon;
 use Closure;
 use Hennest\ExchangeRate\Contracts\CacheInterface;
-use Illuminate\Contracts\Cache\Repository as CacheRepository;
+use Illuminate\Contracts\Cache\Repository as CacheContract;
 use Psr\SimpleCache\InvalidArgumentException;
 
 class CacheService implements CacheInterface
@@ -17,7 +17,7 @@ class CacheService implements CacheInterface
     protected const PREFIX = 'exchange_rate';
 
     public function __construct(
-        protected CacheRepository $cache,
+        protected CacheContract $cache,
     ) {
     }
 
