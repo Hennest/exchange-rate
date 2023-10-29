@@ -35,7 +35,6 @@ class ExchangeRateServiceProvider extends ServiceProvider
 
         /**
          * @var array{
-         *     cache?: array{driver: string|null},
          *     services?: array{
          *         api: class-string|null,
          *         cache: class-string|null,
@@ -54,8 +53,14 @@ class ExchangeRateServiceProvider extends ServiceProvider
                     abstract: CacheFactory::class
                 );
 
+                /**
+                 * @var array{
+                 *     cache: array{driver: string|null},
+                 *     } $configure,
+                 * }
+                 */
                 return clone $factory->store(
-                    name: $configure['cache']['driver'] ?? 'array'
+                    name: $configure['cache']['driver']
                 );
             });
 
