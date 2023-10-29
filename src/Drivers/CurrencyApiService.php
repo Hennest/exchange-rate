@@ -41,22 +41,21 @@ class CurrencyApiService implements ApiInterface
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, float|int>
      * @throws RequestFailed
      */
     public function fetch(): array
     {
         try {
-            return Http::retry(
+            return (array) Http::retry(
                 times: self::RETRY_COUNT,
                 sleepMilliseconds: self::RETRY_DELAY
             )
                 ->get($this->buildApiUrl())
                 ->throw()
-                ->collect(
+                ->json(
                     $this->baseCurrency
-                )
-                ->all();
+                );
         } catch (RequestException $exception) {
             throw new RequestFailed(
                 message: 'Failed to fetch exchange rates.',

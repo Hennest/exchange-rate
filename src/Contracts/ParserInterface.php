@@ -9,10 +9,10 @@ use Hennest\ExchangeRate\Exceptions\InvalidCurrency;
 interface ParserInterface
 {
     /**
-     * @param array<string, string> $exchangeRate
+     * @param array<string, float|int> $exchangeRates
      * @param string[] $toCurrencies
-     * @return array<string, string>
+     * @return array<string, float|int>
      * @throws InvalidCurrency
      */
-    public function parse(array $exchangeRate, array $toCurrencies): array;
+    public function parse(array $exchangeRates, array $toCurrencies): array;
 }

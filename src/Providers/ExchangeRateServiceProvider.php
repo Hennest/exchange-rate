@@ -12,6 +12,7 @@ use Hennest\ExchangeRate\Drivers\CurrencyApiService;
 use Hennest\ExchangeRate\Services\CacheService;
 use Hennest\ExchangeRate\Services\ExchangeRateService;
 use Hennest\ExchangeRate\Services\ParserService;
+use Illuminate\Contracts\Cache\Factory;
 use Illuminate\Contracts\Cache\Factory as CacheFactory;
 use Illuminate\Contracts\Cache\Repository as CacheContract;
 use Illuminate\Support\ServiceProvider;
@@ -50,9 +51,14 @@ class ExchangeRateServiceProvider extends ServiceProvider
         $this->app->when($configure['services']['cache'] ?? CacheService::class)
             ->needs(CacheContract::class)
             ->give(function () use ($configure) {
-                return clone $this->app
-                    ->make(CacheFactory::class)
-                    ->store($configure['cache']['driver'] ?? 'array');
+                /** @var Factory $factory */
+                $factory = $this->app->make(
+                    abstract: CacheFactory::class
+                );
+
+                return clone $factory->store(
+                    name: $configure['cache']['driver'] ?? 'array'
+                );
             });
 
         $this->app->singleton(

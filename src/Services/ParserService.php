@@ -12,20 +12,22 @@ class ParserService implements ParserInterface
     /**
      * @throws InvalidCurrency
      */
-    public function parse(array $exchangeRate, array $toCurrencies): array
+    public function parse(array $exchangeRates, array $toCurrencies): array
     {
         $result = [];
+
+        $exchangeRates = array_change_key_case($exchangeRates);
 
         foreach ($toCurrencies as $currency) {
             $currencyLower = mb_strtolower($currency);
 
-            if ( ! array_key_exists($currencyLower, $exchangeRate)) {
+            if ( ! array_key_exists($currencyLower, $exchangeRates)) {
                 throw new InvalidCurrency(
                     message: "Exchange rate data for currency '$currency' is not available."
                 );
             }
 
-            $result[$currencyLower] = $exchangeRate[$currencyLower];
+            $result[$currencyLower] = $exchangeRates[$currencyLower];
         }
 
         return $result;

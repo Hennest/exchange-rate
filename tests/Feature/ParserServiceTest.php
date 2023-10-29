@@ -20,7 +20,7 @@ it('returns correct format', function (): void {
     ];
 
     $result = $exchangeRateParser->parse(
-        exchangeRate: $exchangeRateApi->fetch(),
+        exchangeRates: $exchangeRateApi->fetch(),
         toCurrencies: ['usd', 'eur', 'gbp']
     );
 
@@ -40,7 +40,7 @@ it('ignores unsupported currency', function (): void {
     ];
 
     $result = $exchangeRateParser->parse(
-        exchangeRate: $exchangeRateApi->fetch(),
+        exchangeRates: $exchangeRateApi->fetch(),
         toCurrencies: ['usd', 'eur', 'gbp']
     );
 

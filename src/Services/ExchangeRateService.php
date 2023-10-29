@@ -20,8 +20,8 @@ class ExchangeRateService implements ExchangeRateInterface
     protected const SCALE = 2;
 
     public function __construct(
-        protected CacheInterface  $cache,
-        protected ApiInterface    $api,
+        protected CacheInterface $cache,
+        protected ApiInterface $api,
         protected ParserInterface $parser,
     ) {
     }
@@ -32,21 +32,28 @@ class ExchangeRateService implements ExchangeRateInterface
      */
     public function rates(array $currencies): array
     {
-        if ($value = $this->cache->get($currencies)) {
-            return $value;
+        $baseCurrency = config('exchange-rate.base_currency');
+
+        if ($value = $this->cache->get([$baseCurrency])) {
+            return $this->parser->parse(
+                exchangeRates: $value,
+                toCurrencies: $currencies
+            );
         }
 
-        $exchangeRates = $this->parser->parse(
-            exchangeRate: $this->api->fetch(),
-            toCurrencies: $currencies
-        );
+        $exchangeRates = $this->api->fetch();
 
         $this->cache->put(
-            cacheKey: $currencies,
+            cacheKey: [
+                $baseCurrency,
+            ],
             value: $exchangeRates,
         );
 
-        return $exchangeRates;
+        return $this->parser->parse(
+            exchangeRates: $exchangeRates,
+            toCurrencies: $currencies
+        );
     }
 
     /**
@@ -55,7 +62,7 @@ class ExchangeRateService implements ExchangeRateInterface
      */
     public function getRate(string $currency): float
     {
-        return (float) $this->rates([$currency])[$currency];
+        return (float) $this->rates([$currency])[mb_strtolower($currency)];
     }
 
     /**

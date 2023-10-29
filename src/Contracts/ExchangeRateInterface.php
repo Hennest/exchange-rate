@@ -14,7 +14,7 @@ interface ExchangeRateInterface
     /**
      *
      * @param string[] $currencies
-     * @return array<string, string>
+     * @return array<string, float|int>
      * @throws RequestFailed
      * @throws InvalidCurrency
      */
