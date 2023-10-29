@@ -14,10 +14,9 @@ class CacheService implements CacheInterface
 {
     protected const CACHE_LIFE_TIME_IN_HOURS = 6;
 
-    protected const PREFIX = 'exchange_rate';
-
     public function __construct(
         protected CacheContract $cache,
+        protected string $prefix,
     ) {
     }
 
@@ -26,7 +25,7 @@ class CacheService implements CacheInterface
      */
     protected function cacheKey(array $cacheKey): string
     {
-        return self::PREFIX . "." . implode('.', $cacheKey);
+        return $this->prefix . "." . implode('.', $cacheKey);
     }
 
     /**

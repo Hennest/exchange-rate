@@ -6,7 +6,6 @@ namespace Hennest\ExchangeRate\Services;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\Exception\MathException;
-use Brick\Math\Exception\RoundingNecessaryException;
 use Brick\Math\RoundingMode;
 use Hennest\ExchangeRate\Contracts\ApiInterface;
 use Hennest\ExchangeRate\Contracts\CacheInterface;
@@ -17,12 +16,12 @@ use Hennest\ExchangeRate\Exceptions\RequestFailed;
 
 class ExchangeRateService implements ExchangeRateInterface
 {
-    protected const SCALE = 2;
-
     public function __construct(
         protected CacheInterface $cache,
         protected ApiInterface $api,
         protected ParserInterface $parser,
+        protected string $baseCurrency,
+        protected int $scale,
     ) {
     }
 
@@ -32,9 +31,7 @@ class ExchangeRateService implements ExchangeRateInterface
      */
     public function rates(array $currencies): array
     {
-        $baseCurrency = config('exchange-rate.base_currency');
-
-        if ($value = $this->cache->get([$baseCurrency])) {
+        if ($value = $this->cache->get([$this->baseCurrency])) {
             return $this->parser->parse(
                 exchangeRates: $value,
                 toCurrencies: $currencies
@@ -45,7 +42,7 @@ class ExchangeRateService implements ExchangeRateInterface
 
         $this->cache->put(
             cacheKey: [
-                $baseCurrency,
+                $this->baseCurrency,
             ],
             value: $exchangeRates,
         );
@@ -69,7 +66,6 @@ class ExchangeRateService implements ExchangeRateInterface
      * @throws RequestFailed
      * @throws InvalidCurrency
      * @throws MathException
-     * @throws RoundingNecessaryException
      */
     public function convert(float|int|string $amount, string $fromCurrency, string $toCurrency, ?int $scale = null): float
     {
@@ -81,14 +77,12 @@ class ExchangeRateService implements ExchangeRateInterface
         $exchangeRate = BigDecimal::of($rates[$toCurrency])
             ->dividedBy(
                 that: $rates[$fromCurrency],
-                scale: $scale ?? config('exchange-rate.math.scale', self::SCALE),
-                roundingMode: RoundingMode::DOWN
             );
 
         return BigDecimal::of($amount)
             ->multipliedBy($exchangeRate)
             ->toScale(
-                scale: $scale ?? config('exchange-rate.math.scale', self::SCALE),
+                scale: $scale ?? $this->scale,
                 roundingMode: RoundingMode::DOWN
             )->toFloat();
     }

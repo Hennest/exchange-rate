@@ -21,20 +21,18 @@ class ExchangeRateServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        $config = __DIR__ . '/../../config/exchange-rate.php';
-
         $this->publishes([
-            $config => config_path('exchange-rate.php'),
+            __DIR__ . '/../../config/exchange-rate.php' => config_path('exchange-rate.php'),
         ], 'exchange-rate-config');
-
-        $this->mergeConfigFrom(
-            $config,
-            'exchange-rate'
-        );
     }
 
     public function register(): void
     {
+        $this->mergeConfigFrom(
+            path: __DIR__ . '/../../config/exchange-rate.php',
+            key: 'exchange-rate'
+        );
+
         /**
          * @var array{
          *     cache?: array{driver: string|null},
@@ -61,10 +59,18 @@ class ExchangeRateServiceProvider extends ServiceProvider
                 );
             });
 
+        $this->app->when($configure['services']['cache'] ?? CacheService::class)
+            ->needs('$prefix')
+            ->giveConfig('exchange-rate.cache.prefix');
+
         $this->app->singleton(
             abstract: CacheInterface::class,
             concrete: $configure['services']['cache'] ?? CacheService::class
         );
+
+        $this->app->when($configure['services']['api'] ?? CurrencyApiService::class)
+            ->needs('$baseCurrency')
+            ->giveConfig('exchange-rate.base_currency');
 
         $this->app->singleton(
             abstract: ApiInterface::class,
@@ -75,6 +81,14 @@ class ExchangeRateServiceProvider extends ServiceProvider
             abstract: ParserInterface::class,
             concrete: $configure['services']['parser'] ?? ParserService::class
         );
+
+        $this->app->when($configure['services']['exchange_rate'] ?? ExchangeRateService::class)
+            ->needs('$baseCurrency')
+            ->giveConfig('exchange-rate.base_currency');
+
+        $this->app->when($configure['services']['exchange_rate'] ?? ExchangeRateService::class)
+            ->needs('$scale')
+            ->giveConfig('exchange-rate.math.scale');
 
         $this->app->singleton(
             abstract: ExchangeRateInterface::class,

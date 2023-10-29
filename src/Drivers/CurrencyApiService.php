@@ -15,8 +15,6 @@ use Illuminate\Support\Facades\Http;
  */
 class CurrencyApiService implements ApiInterface
 {
-    protected const BASE_CURRENCY = 'USD';
-
     protected const RETRY_COUNT = 3;
 
     protected const RETRY_DELAY = 200;
@@ -25,10 +23,10 @@ class CurrencyApiService implements ApiInterface
 
     protected string $baseCurrency;
 
-    public function __construct(?string $baseCurrency = null)
+    public function __construct(string $baseCurrency)
     {
-        $this->baseCurrency = $baseCurrency ?? mb_strtolower(
-            config('exchange-rate.base_currency', self::BASE_CURRENCY)
+        $this->baseCurrency = mb_strtolower(
+            $baseCurrency
         );
     }
 

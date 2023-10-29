@@ -16,7 +16,7 @@ interface ExchangeRateInterface
      * @param string[] $currencies
      *   An array of currency codes for which exchange rates are requested.
      *
-     * @return array
+     * @return array<string, float|int>
      *   An associative array where currency codes are keys, and exchange rates are values.
      *
      * @throws InvalidCurrency

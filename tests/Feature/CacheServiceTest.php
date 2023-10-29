@@ -81,18 +81,18 @@ it('can store cache', function (): void {
 })->group('exchangeCache');
 
 it('can generate cache key', function (): void {
-
     $cache = app(CacheInterface::class);
     $reflectionClass = new ReflectionClass($cache);
-    $reflectionMethod = $reflectionClass->getMethod('cacheKey');
+    $cacheKey = $reflectionClass->getMethod('cacheKey');
+    $prefix = $reflectionClass->getProperty('prefix');
 
     $currencies = [
         'usd',
         'eur',
     ];
 
-    $actualCacheKey = $reflectionMethod->invoke($cache, $currencies);
-    $expectedCacheKey = 'exchange_rate.' . implode('.', $currencies);
+    $actualCacheKey = $cacheKey->invoke($cache, $currencies);
+    $expectedCacheKey = $prefix->getValue($cache) . '.' . implode('.', $currencies);
 
     expect($actualCacheKey)->toBe($expectedCacheKey);
 })->group('exchangeCache');

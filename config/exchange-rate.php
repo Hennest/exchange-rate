@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'base_currency' => 'USD',
+    'base_currency' => env('EXCHANGE_RATE_BASE_CURRENCY', 'USD'),
 
     /**
      * Arbitrary Precision Calculator.
@@ -21,7 +21,8 @@ return [
      *
      */
     'cache' => [
-        'driver' => 'file',
+        'prefix' => env('EXCHANGE_RATE_CACHE_PREFIX', 'exchange_rate'),
+        'driver' => env('EXCHANGE_RATE_CACHE_DRIVER', env('CACHE_DRIVER')),
         'ttl' => 6 * 3600,
     ],
 
