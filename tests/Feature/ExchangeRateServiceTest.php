@@ -7,7 +7,7 @@ use Hennest\ExchangeRate\Contracts\ExchangeRateInterface;
 use Hennest\ExchangeRate\Tests\Feature\Data\ApiData;
 
 it('returns cached exchange rates if available', function (): void {
-    $this->app->bind(ApiInterface::class, fn () => new ApiData);
+    app()->bind(ApiInterface::class, fn () => new ApiData);
 
     $exchangeRateService = app(ExchangeRateInterface::class);
 
@@ -21,7 +21,7 @@ it('returns cached exchange rates if available', function (): void {
 })->group('exchangeService');
 
 it('returns exchange rate for a given currency', function (): void {
-    $this->app->bind(ApiInterface::class, fn () => new ApiData);
+    app()->bind(ApiInterface::class, fn () => new ApiData);
 
     $exchangeRateService = app(ExchangeRateInterface::class);
 
@@ -33,7 +33,7 @@ it('returns exchange rate for a given currency', function (): void {
 })->group('exchangeService');
 
 it('can convert exchange rate for currencies', function (): void {
-    $this->app->bind(ApiInterface::class, fn () => new ApiData);
+    app()->bind(ApiInterface::class, fn () => new ApiData);
 
     $exchangeRateService = app(ExchangeRateInterface::class);
 

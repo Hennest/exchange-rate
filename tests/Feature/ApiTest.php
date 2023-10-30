@@ -8,7 +8,7 @@ use Hennest\ExchangeRate\Tests\Feature\Data\ApiData;
 use Illuminate\Support\Facades\Http;
 
 it('fetches exchange rate with valid currency', function (): void {
-    $this->app->bind(ApiInterface::class, fn () => new ApiData);
+    app()->bind(ApiInterface::class, fn () => new ApiData);
 
     $exchangeRateApi = app(ApiInterface::class);
 

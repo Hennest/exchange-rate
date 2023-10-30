@@ -8,12 +8,12 @@ use Hennest\ExchangeRate\Exceptions\InvalidCurrency;
 use Hennest\ExchangeRate\Tests\Feature\Data\ApiData;
 
 it('returns correct format', function (): void {
-    $this->app->bind(ApiInterface::class, fn () => new ApiData);
+    app()->bind(ApiInterface::class, fn () => new ApiData);
 
     $exchangeRateApi = app(ApiInterface::class);
     $exchangeRateParser = app(ParserInterface::class);
 
-    $parsedResult = [
+    $expectedResult = [
         'usd' => 1.0,
         'eur' => 0.82,
         'gbp' => 0.72,
@@ -24,16 +24,16 @@ it('returns correct format', function (): void {
         toCurrencies: ['usd', 'eur', 'gbp']
     );
 
-    expect($result)->toBe($parsedResult);
+    expect($result)->toBe($expectedResult);
 })->group('exchangeParser');
 
 it('ignores unsupported currency', function (): void {
-    $this->app->bind(ApiInterface::class, fn () => new ApiData);
+    app()->bind(ApiInterface::class, fn () => new ApiData);
 
     $exchangeRateApi = app(ApiInterface::class);
     $exchangeRateParser = app(ParserInterface::class);
 
-    $parsedResult = [
+    $expectedResult = [
         'usd' => 1.0,
         'eur' => 0.82,
         'gbp' => 0.72,
@@ -44,7 +44,7 @@ it('ignores unsupported currency', function (): void {
         toCurrencies: ['usd', 'eur', 'gbp']
     );
 
-    expect($result)->toBe($parsedResult);
+    expect($result)->toBe($expectedResult);
 })->group('exchangeParser');
 
 it('throws exception when currency is unavailable', function (): void {
