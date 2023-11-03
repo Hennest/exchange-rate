@@ -7,57 +7,35 @@ use Hennest\ExchangeRate\Contracts\ParserInterface;
 use Hennest\ExchangeRate\Exceptions\InvalidCurrency;
 use Hennest\ExchangeRate\Tests\Feature\Data\ApiData;
 
+beforeEach(fn () => app()->bind(ApiInterface::class, fn () => new ApiData));
+
 it('returns correct format', function (): void {
-    app()->bind(ApiInterface::class, fn () => new ApiData);
-
     $exchangeRateApi = app(ApiInterface::class);
     $exchangeRateParser = app(ParserInterface::class);
 
-    $expectedResult = [
-        'usd' => 1.0,
-        'eur' => 0.82,
-        'gbp' => 0.72,
-    ];
-
     $result = $exchangeRateParser->parse(
-        exchangeRates: $exchangeRateApi->fetch(),
+        exchangeRates: $exchangeRateApi->fetch()->rates(),
         toCurrencies: ['usd', 'eur', 'gbp']
     );
 
-    expect($result)->toBe($expectedResult);
-})->group('exchangeParser');
-
-it('ignores unsupported currency', function (): void {
-    app()->bind(ApiInterface::class, fn () => new ApiData);
-
-    $exchangeRateApi = app(ApiInterface::class);
-    $exchangeRateParser = app(ParserInterface::class);
-
-    $expectedResult = [
-        'usd' => 1.0,
-        'eur' => 0.82,
-        'gbp' => 0.72,
-    ];
-
-    $result = $exchangeRateParser->parse(
-        exchangeRates: $exchangeRateApi->fetch(),
-        toCurrencies: ['usd', 'eur', 'gbp']
-    );
-
-    expect($result)->toBe($expectedResult);
+    expect($result)->toBe([
+        'USD' => 1.0,
+        'EUR' => 0.82,
+        'GBP' => 0.72,
+    ]);
 })->group('exchangeParser');
 
 it('throws exception when currency is unavailable', function (): void {
+    $exchangeRateApi = app(ApiInterface::class);
     $exchangeRateParser = app(ParserInterface::class);
 
-    $exchangeRate = [
-        'usd' => 1.0,
-        'eur' => 0.8,
-    ];
-    $toCurrencies = ['GBP'];
+    $toCurrencies = ['AUD', 'BRL', 'JPY'];
 
-    expect(fn () => $exchangeRateParser->parse($exchangeRate, $toCurrencies))->toThrow(
+    expect(fn () => $exchangeRateParser->parse($exchangeRateApi->fetch()->rates(), $toCurrencies))->toThrow(
         exception: InvalidCurrency::class,
-        exceptionMessage: "Exchange rate data for currency 'GBP' is not available."
+        exceptionMessage: sprintf(
+            "Exchange rate data for currencies '%s' is not available.",
+            implode(', ', $toCurrencies)
+        )
     );
 })->group('exchangeParser');
