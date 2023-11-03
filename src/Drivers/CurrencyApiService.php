@@ -47,9 +47,9 @@ class CurrencyApiService implements ApiInterface
             ->json();
 
         return $this->responseAssembler->create(
-            array_keys($response)[1],
-            new Carbon($response['date']),
-            $response[$this->baseCurrency]
+            baseCurrency: array_keys($response)[1],
+            date: new Carbon($response['date']),
+            rates: $response[$this->baseCurrency]
         );
     }
 }

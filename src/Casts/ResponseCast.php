@@ -38,9 +38,9 @@ class ResponseCast implements CastsAttributes
         }
 
         return $this->responseAssembler->create(
-            $value['base'],
-            new Carbon($value['date']),
-            $value['rates']
+            baseCurrency: $value['base'],
+            date: new Carbon($value['date']),
+            rates: $value['rates']
         );
     }
 
