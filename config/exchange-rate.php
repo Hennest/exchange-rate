@@ -27,6 +27,13 @@ return [
     ],
 
     /**
+     * Builder classes, needed to create DTO.
+     */
+    'assemblers' => [
+        'response' => \Hennest\ExchangeRate\Assembler\ResponseAssembler::class,
+    ],
+
+    /**
      * Services that can be overloaded.
      */
     'services' => [

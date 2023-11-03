@@ -38,17 +38,17 @@ class ExchangeRateService implements ExchangeRateInterface
             );
         }
 
-        $exchangeRates = $this->api->fetch();
+        $response = $this->api->fetch();
 
         $this->cache->put(
             cacheKey: [
                 $this->baseCurrency,
             ],
-            value: $exchangeRates,
+            value: $response->rates(),
         );
 
         return $this->parser->parse(
-            exchangeRates: $exchangeRates,
+            exchangeRates: $response->rates(),
             toCurrencies: $currencies
         );
     }

@@ -6,7 +6,7 @@ use Hennest\ExchangeRate\Contracts\ApiInterface;
 use Hennest\ExchangeRate\Contracts\ExchangeRateInterface;
 use Hennest\ExchangeRate\Tests\Feature\Data\ApiData;
 
-beforeEach(fn () => app()->bind(ApiInterface::class, fn () => new ApiData));
+beforeEach(fn () => app()->bind(ApiInterface::class, ApiData::class));
 
 it('returns exchange rates', function (): void {
     $exchangeRateService = app(ExchangeRateInterface::class);

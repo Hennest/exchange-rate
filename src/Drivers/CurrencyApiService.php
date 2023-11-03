@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Hennest\ExchangeRate\Drivers;
 
 use Hennest\ExchangeRate\Contracts\ApiInterface;
+use Hennest\ExchangeRate\Contracts\ResponseAssemblerInterface;
+use Hennest\ExchangeRate\Contracts\ResponseInterface;
 use Illuminate\Http\Client\Factory as HttpFactory;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Carbon;
 
 /**
  * @see https://github.com/fawazahmed0/currency-api
@@ -17,6 +20,7 @@ class CurrencyApiService implements ApiInterface
 
     public function __construct(
         protected HttpFactory $http,
+        protected ResponseAssemblerInterface $responseAssembler,
         protected string $baseCurrency,
     ) {
         $this->baseCurrency = mb_strtolower(
@@ -33,16 +37,19 @@ class CurrencyApiService implements ApiInterface
     }
 
     /**
-     * @return array<string, float|int>
      * @throws RequestException
      */
-    public function fetch(): array
+    public function fetch(): ResponseInterface
     {
-        return (array) $this->http
+        $response =  (array) $this->http
             ->get($this->buildApiUrl())
             ->throw()
-            ->json(
-                $this->baseCurrency
-            );
+            ->json();
+
+        return $this->responseAssembler->create(
+            array_keys($response)[1],
+            new Carbon($response['date']),
+            $response[$this->baseCurrency]
+        );
     }
 }

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Hennest\ExchangeRate\Providers;
 
+use Hennest\ExchangeRate\Assembler\ResponseAssembler;
 use Hennest\ExchangeRate\Contracts\ApiInterface;
 use Hennest\ExchangeRate\Contracts\CacheInterface;
 use Hennest\ExchangeRate\Contracts\ExchangeRateInterface;
 use Hennest\ExchangeRate\Contracts\ParserInterface;
+use Hennest\ExchangeRate\Contracts\ResponseAssemblerInterface;
 use Hennest\ExchangeRate\Drivers\CurrencyApiService;
 use Hennest\ExchangeRate\Services\CacheService;
 use Hennest\ExchangeRate\Services\ExchangeRateService;
@@ -41,9 +43,18 @@ class ExchangeRateServiceProvider extends ServiceProvider
          *         parser: class-string|null,
          *         exchange_rate: class-string|null,
          *     },
+         *     assemblers?: array{
+         *         response: class-string|null,
+         *     },
          * } $configure
          */
         $configure = config('exchange-rate', []);
+
+
+        $this->app->singleton(
+            abstract: ResponseAssemblerInterface::class,
+            concrete: $configure['assemblers']['response'] ?? ResponseAssembler::class
+        );
 
         $this->app->when($configure['services']['cache'] ?? CacheService::class)
             ->needs(CacheContract::class)

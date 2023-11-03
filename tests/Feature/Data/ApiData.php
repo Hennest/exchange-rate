@@ -5,15 +5,25 @@ declare(strict_types=1);
 namespace Hennest\ExchangeRate\Tests\Feature\Data;
 
 use Hennest\ExchangeRate\Contracts\ApiInterface;
+use Hennest\ExchangeRate\Contracts\ResponseAssemblerInterface;
+use Hennest\ExchangeRate\Contracts\ResponseInterface;
 
 class ApiData implements ApiInterface
 {
-    public function fetch(): array
+    public function __construct(protected ResponseAssemblerInterface $responseAssembler)
     {
-        return [
-            'usd' => 1.0,
-            'eur' => 0.82,
-            'gbp' => 0.72,
-        ];
+    }
+
+    public function fetch(): ResponseInterface
+    {
+        return $this->responseAssembler->create(
+            baseCurrency: 'usd',
+            date: today(),
+            rates: [
+                'usd' => 1.0,
+                'eur' => 0.82,
+                'gbp' => 0.72,
+            ]
+        );
     }
 }
