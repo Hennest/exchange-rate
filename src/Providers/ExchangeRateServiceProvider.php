@@ -49,8 +49,8 @@ class ExchangeRateServiceProvider extends ServiceProvider
             ->needs(CacheContract::class)
             ->give(function () use ($configure) {
                 /** @var Factory $factory */
-                $factory = $this->app->make(
-                    abstract: CacheFactory::class
+                $factory = $this->app->get(
+                    id: CacheFactory::class
                 );
 
                 /**

@@ -39,7 +39,7 @@ it('returns expected value when cache exists', function (): void {
 
     $exchangeRateCache->put($currencies, $exchangeRate);
 
-    expect($exchangeRateCache->get($currencies))->toEqual($exchangeRate);
+    expect($exchangeRateCache->get($currencies))->toBe($exchangeRate);
 })->group('exchangeCache');
 
 it('returns null when cache does not exist', function (): void {

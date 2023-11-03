@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Hennest\ExchangeRate\Contracts\ApiInterface;
-use Hennest\ExchangeRate\Exceptions\RequestFailed;
 use Hennest\ExchangeRate\Tests\Feature\Data\ApiData;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 
 it('fetches exchange rate with valid currency', function (): void {
@@ -26,6 +26,6 @@ it('throws an exception if it fails to fetch exchange rate', function (): void {
 
     $exchangeRateApi = app(ApiInterface::class);
 
-    expect(fn () => $exchangeRateApi->fetch())->toThrow(RequestFailed::class);
+    expect(fn () => $exchangeRateApi->fetch())->toThrow(RequestException::class);
 
 })->group('exchangeApi');

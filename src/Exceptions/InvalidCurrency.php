@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Hennest\ExchangeRate\Exceptions;
 
-use Exception;
+use OutOfBoundsException;
 
-class InvalidCurrency extends Exception
+class InvalidCurrency extends OutOfBoundsException
 {
 }

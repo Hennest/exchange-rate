@@ -6,23 +6,21 @@ use Hennest\ExchangeRate\Contracts\ApiInterface;
 use Hennest\ExchangeRate\Contracts\ExchangeRateInterface;
 use Hennest\ExchangeRate\Tests\Feature\Data\ApiData;
 
-it('returns cached exchange rates if available', function (): void {
-    app()->bind(ApiInterface::class, fn () => new ApiData);
+beforeEach(fn () => app()->bind(ApiInterface::class, fn () => new ApiData));
 
+it('returns exchange rates', function (): void {
     $exchangeRateService = app(ExchangeRateInterface::class);
 
     $result = $exchangeRateService->rates(['usd', 'eur', 'gbp']);
 
     expect($result)->toBe([
-        'usd' => 1.0,
-        'eur' => 0.82,
-        'gbp' => 0.72,
+        'USD' => 1.0,
+        'EUR' => 0.82,
+        'GBP' => 0.72,
     ]);
 })->group('exchangeService');
 
 it('returns exchange rate for a given currency', function (): void {
-    app()->bind(ApiInterface::class, fn () => new ApiData);
-
     $exchangeRateService = app(ExchangeRateInterface::class);
 
     $result = $exchangeRateService->getRate(
@@ -33,8 +31,6 @@ it('returns exchange rate for a given currency', function (): void {
 })->group('exchangeService');
 
 it('can convert exchange rate for currencies', function (): void {
-    app()->bind(ApiInterface::class, fn () => new ApiData);
-
     $exchangeRateService = app(ExchangeRateInterface::class);
 
     $result = $exchangeRateService->convert(

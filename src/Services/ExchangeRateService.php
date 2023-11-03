@@ -12,7 +12,7 @@ use Hennest\ExchangeRate\Contracts\CacheInterface;
 use Hennest\ExchangeRate\Contracts\ExchangeRateInterface;
 use Hennest\ExchangeRate\Contracts\ParserInterface;
 use Hennest\ExchangeRate\Exceptions\InvalidCurrency;
-use Hennest\ExchangeRate\Exceptions\RequestFailed;
+use Illuminate\Http\Client\RequestException;
 
 class ExchangeRateService implements ExchangeRateInterface
 {
@@ -27,7 +27,7 @@ class ExchangeRateService implements ExchangeRateInterface
 
     /**
      * @throws InvalidCurrency
-     * @throws RequestFailed
+     * @throws RequestException
      */
     public function rates(array $currencies): array
     {
@@ -54,24 +54,24 @@ class ExchangeRateService implements ExchangeRateInterface
     }
 
     /**
-     * @throws RequestFailed
+     * @throws RequestException
      * @throws InvalidCurrency
      */
     public function getRate(string $currency): float
     {
-        return (float) $this->rates([$currency])[mb_strtolower($currency)];
+        return (float) $this->rates([$currency])[mb_strtoupper($currency)];
     }
 
     /**
-     * @throws RequestFailed
+     * @throws RequestException
      * @throws InvalidCurrency
      * @throws MathException
      */
     public function convert(float|int|string $amount, string $fromCurrency, string $toCurrency, ?int $scale = null): float
     {
         $rates = $this->rates([
-            $fromCurrency = mb_strtolower($fromCurrency),
-            $toCurrency = mb_strtolower($toCurrency)
+            $fromCurrency = mb_strtoupper($fromCurrency),
+            $toCurrency = mb_strtoupper($toCurrency)
         ]);
 
         $exchangeRate = BigDecimal::of($rates[$toCurrency])

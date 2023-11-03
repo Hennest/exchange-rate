@@ -6,7 +6,7 @@ namespace Hennest\ExchangeRate\Contracts;
 
 use Brick\Math\Exception\MathException;
 use Hennest\ExchangeRate\Exceptions\InvalidCurrency;
-use Hennest\ExchangeRate\Exceptions\RequestFailed;
+use Illuminate\Http\Client\RequestException;
 
 interface ExchangeRateInterface
 {
@@ -22,7 +22,7 @@ interface ExchangeRateInterface
      * @throws InvalidCurrency
      *   If an invalid currency is provided in the list.
      *
-     * @throws RequestFailed
+     * @throws RequestException
      *   If the request to the API fails.
      */
     public function rates(array $currencies): array;
@@ -36,7 +36,7 @@ interface ExchangeRateInterface
      * @return float
      *   The exchange rate as a floating-point number.
      *
-     * @throws RequestFailed
+     * @throws RequestException
      *   If the request to the API fails.
      *
      * @throws InvalidCurrency
@@ -63,7 +63,7 @@ interface ExchangeRateInterface
      * @return float
      *   The converted amount as a floating-point number.
      *
-     * @throws RequestFailed
+     * @throws RequestException
      *   If the request to the API fails.
      *
      * @throws InvalidCurrency
