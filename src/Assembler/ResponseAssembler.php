@@ -9,7 +9,7 @@ use Hennest\ExchangeRate\Contracts\ResponseInterface;
 use Hennest\ExchangeRate\Dto\Response;
 use Illuminate\Support\Carbon;
 
-class ResponseAssembler implements ResponseAssemblerInterface
+final class ResponseAssembler implements ResponseAssemblerInterface
 {
     /**
      * @param float[]|int[] $rates

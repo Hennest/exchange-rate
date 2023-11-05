@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Hennest\ExchangeRate\Contracts\ApiInterface;
 use Hennest\ExchangeRate\Contracts\ParserInterface;
-use Hennest\ExchangeRate\Exceptions\InvalidCurrency;
+use Hennest\ExchangeRate\Exceptions\InvalidCurrencyException;
 use Hennest\ExchangeRate\Tests\Feature\Data\ApiData;
 
 beforeEach(fn () => app()->bind(ApiInterface::class, ApiData::class));
@@ -14,7 +14,7 @@ it('returns correct format', function (): void {
     $exchangeRateParser = app(ParserInterface::class);
 
     $result = $exchangeRateParser->parse(
-        exchangeRates: $exchangeRateApi->fetch()->rates(),
+        response: $exchangeRateApi->fetch(),
         toCurrencies: ['usd', 'eur', 'gbp']
     );
 
@@ -31,8 +31,8 @@ it('throws exception when currency is unavailable', function (): void {
 
     $toCurrencies = ['AUD', 'BRL', 'JPY'];
 
-    expect(fn () => $exchangeRateParser->parse($exchangeRateApi->fetch()->rates(), $toCurrencies))->toThrow(
-        exception: InvalidCurrency::class,
+    expect(fn () => $exchangeRateParser->parse($exchangeRateApi->fetch(), $toCurrencies))->toThrow(
+        exception: InvalidCurrencyException::class,
         exceptionMessage: sprintf(
             "Exchange rate data for currencies '%s' is not available.",
             implode(', ', $toCurrencies)

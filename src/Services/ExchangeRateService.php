@@ -11,10 +11,10 @@ use Hennest\ExchangeRate\Contracts\ApiInterface;
 use Hennest\ExchangeRate\Contracts\CacheInterface;
 use Hennest\ExchangeRate\Contracts\ExchangeRateInterface;
 use Hennest\ExchangeRate\Contracts\ParserInterface;
-use Hennest\ExchangeRate\Exceptions\InvalidCurrency;
+use Hennest\ExchangeRate\Exceptions\InvalidCurrencyException;
 use Illuminate\Http\Client\RequestException;
 
-class ExchangeRateService implements ExchangeRateInterface
+final class ExchangeRateService implements ExchangeRateInterface
 {
     public function __construct(
         protected CacheInterface $cache,
@@ -26,14 +26,14 @@ class ExchangeRateService implements ExchangeRateInterface
     }
 
     /**
-     * @throws InvalidCurrency
+     * @throws InvalidCurrencyException
      * @throws RequestException
      */
     public function rates(array $currencies): array
     {
         if ($value = $this->cache->get([$this->baseCurrency])) {
             return $this->parser->parse(
-                exchangeRates: $value,
+                response: $value,
                 toCurrencies: $currencies
             );
         }
@@ -44,18 +44,18 @@ class ExchangeRateService implements ExchangeRateInterface
             cacheKey: [
                 $this->baseCurrency,
             ],
-            value: $response->rates(),
+            value: $response,
         );
 
         return $this->parser->parse(
-            exchangeRates: $response->rates(),
+            response: $response,
             toCurrencies: $currencies
         );
     }
 
     /**
      * @throws RequestException
-     * @throws InvalidCurrency
+     * @throws InvalidCurrencyException
      */
     public function getRate(string $currency): float
     {
@@ -64,7 +64,7 @@ class ExchangeRateService implements ExchangeRateInterface
 
     /**
      * @throws RequestException
-     * @throws InvalidCurrency
+     * @throws InvalidCurrencyException
      * @throws MathException
      */
     public function convert(float|int|string $amount, string $fromCurrency, string $toCurrency, ?int $scale = null): float

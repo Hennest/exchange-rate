@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace Hennest\ExchangeRate\Services;
 
 use Hennest\ExchangeRate\Contracts\ParserInterface;
-use Hennest\ExchangeRate\Exceptions\InvalidCurrency;
+use Hennest\ExchangeRate\Contracts\ResponseInterface;
+use Hennest\ExchangeRate\Exceptions\InvalidCurrencyException;
 use InvalidArgumentException;
 
-class ParserService implements ParserInterface
+final class ParserService implements ParserInterface
 {
     /**
-     * @throws InvalidCurrency
+     * @throws InvalidCurrencyException
      */
-    public function parse(array $exchangeRates, array $toCurrencies): array
+    public function parse(ResponseInterface $response, array $toCurrencies): array
     {
         if (empty($toCurrencies)) {
             throw new InvalidArgumentException(
@@ -21,11 +22,11 @@ class ParserService implements ParserInterface
             );
         }
 
-        $lowerExchangeRates = array_change_key_case($exchangeRates, CASE_UPPER);
-        $lowerToCurrencies = array_change_key_case(array_flip($toCurrencies), CASE_UPPER);
+        $upperExchangeRates = array_change_key_case($response->rates(), CASE_UPPER);
+        $upperCurrencies = array_change_key_case(array_flip($toCurrencies), CASE_UPPER);
 
-        if ($notExist = array_diff_key($lowerToCurrencies, $lowerExchangeRates)) {
-            throw new InvalidCurrency(
+        if ($notExist = array_diff_key($upperCurrencies, $upperExchangeRates)) {
+            throw new InvalidCurrencyException(
                 message: sprintf(
                     "Exchange rate data for currencies '%s' is not available.",
                     implode(', ', array_keys($notExist))
@@ -34,8 +35,8 @@ class ParserService implements ParserInterface
         }
 
         return array_intersect_key(
-            $lowerExchangeRates,
-            $lowerToCurrencies
+            $upperExchangeRates,
+            $upperCurrencies
         );
     }
 }

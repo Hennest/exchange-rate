@@ -6,6 +6,6 @@ namespace Hennest\ExchangeRate\Exceptions;
 
 use OutOfBoundsException;
 
-class InvalidCurrency extends OutOfBoundsException
+final class InvalidCurrencyException extends OutOfBoundsException
 {
 }

@@ -19,7 +19,7 @@ use Illuminate\Contracts\Cache\Factory as CacheFactory;
 use Illuminate\Contracts\Cache\Repository as CacheContract;
 use Illuminate\Support\ServiceProvider;
 
-class ExchangeRateServiceProvider extends ServiceProvider
+final class ExchangeRateServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {

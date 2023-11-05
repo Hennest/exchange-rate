@@ -35,7 +35,7 @@ interface ResponseInterface extends Arrayable, Castable, Jsonable, JsonSerializa
     /**
      * Get the class name for casting this object using a custom cast.
      *
-     * @param  array<string, mixed>  $arguments
+     * @param array<string, mixed> $arguments
      */
     public static function castUsing(array $arguments): string;
 

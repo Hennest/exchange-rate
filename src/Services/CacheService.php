@@ -10,9 +10,9 @@ use Hennest\ExchangeRate\Contracts\CacheInterface;
 use Illuminate\Contracts\Cache\Repository as CacheContract;
 use Psr\SimpleCache\InvalidArgumentException;
 
-class CacheService implements CacheInterface
+final class CacheService implements CacheInterface
 {
-    protected const CACHE_LIFE_TIME_IN_HOURS = 6;
+    private const CACHE_LIFE_TIME_IN_HOURS = 6;
 
     public function __construct(
         protected CacheContract $cache,
@@ -23,7 +23,7 @@ class CacheService implements CacheInterface
     /**
      * @param string[] $cacheKey
      */
-    protected function cacheKey(array $cacheKey): string
+    private function cacheKey(array $cacheKey): string
     {
         return $this->prefix . "." . implode('.', $cacheKey);
     }

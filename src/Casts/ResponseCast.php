@@ -14,7 +14,7 @@ use UnexpectedValueException;
 /**
  * @implements CastsAttributes<ResponseInterface, ResponseInterface>
  */
-class ResponseCast implements CastsAttributes
+final class ResponseCast implements CastsAttributes
 {
     public function __construct(protected ResponseAssemblerInterface $responseAssembler)
     {

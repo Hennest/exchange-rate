@@ -8,7 +8,7 @@ use Hennest\ExchangeRate\Casts\ResponseCast;
 use Hennest\ExchangeRate\Contracts\ResponseInterface;
 use Illuminate\Support\Carbon;
 
-class Response implements ResponseInterface
+final class Response implements ResponseInterface
 {
     /**
      * @param float[]|int[] $rates
@@ -35,11 +35,11 @@ class Response implements ResponseInterface
      */
     public function rates(): array
     {
-        return array_change_key_case($this->rates, CASE_UPPER);
+        return $this->rates;
     }
 
     /**
-     * @param  array<string, mixed>  $arguments
+     * @param array<string, mixed> $arguments
      */
     public static function castUsing(array $arguments): string
     {

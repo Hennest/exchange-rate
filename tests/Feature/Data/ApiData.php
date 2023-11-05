@@ -8,7 +8,7 @@ use Hennest\ExchangeRate\Contracts\ApiInterface;
 use Hennest\ExchangeRate\Contracts\ResponseAssemblerInterface;
 use Hennest\ExchangeRate\Contracts\ResponseInterface;
 
-class ApiData implements ApiInterface
+final class ApiData implements ApiInterface
 {
     public function __construct(protected ResponseAssemblerInterface $responseAssembler)
     {

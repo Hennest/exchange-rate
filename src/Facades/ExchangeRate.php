@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Facade;
  *
  * @see \Hennest\ExchangeRate\Services\ExchangeRateService;
  */
-class ExchangeRate extends Facade
+final class ExchangeRate extends Facade
 {
     /**
      * @return class-string
