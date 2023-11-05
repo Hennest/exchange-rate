@@ -50,5 +50,5 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true
         }
-    },
+    }
 }
