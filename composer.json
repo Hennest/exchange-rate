@@ -22,8 +22,7 @@
     },
     "require": {
         "php": "^8.1",
-        "guzzlehttp/guzzle": "^7.8",
-        "illuminate/support": "^10.29"
+        "guzzlehttp/guzzle": "^7.8"
     },
     "require-dev": {
         "laravel/pint": "^1.13",
