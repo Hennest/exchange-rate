@@ -16,7 +16,7 @@ use Illuminate\Support\Carbon;
  */
 final class CurrencyApiService implements ApiInterface
 {
-    private const API_URL_TEMPLATE = 'https://raw.githubusercontent.com/fawazahmed0/currency-api/1/latest/currencies/%s.min.json';
+    private const API_URL_TEMPLATE = 'https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/%s.min.json';
 
     public function __construct(
         protected HttpFactory $http,
