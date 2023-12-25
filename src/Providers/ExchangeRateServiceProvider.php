@@ -46,6 +46,10 @@ final class ExchangeRateServiceProvider extends ServiceProvider
          *     assemblers?: array{
          *         response: class-string|null,
          *     },
+         *     cache?: array{
+         *         driver: string|null,
+         *         ttl: int|null,
+         *     },
          * } $configure
          */
         $configure = config('exchange-rate', []);
@@ -78,6 +82,10 @@ final class ExchangeRateServiceProvider extends ServiceProvider
         $this->app->when($configure['services']['cache'] ?? CacheService::class)
             ->needs('$prefix')
             ->giveConfig('exchange-rate.cache.prefix');
+
+        $this->app->when($configure['services']['cache'] ?? CacheService::class)
+            ->needs('$ttl')
+            ->giveConfig('exchange-rate.cache.ttl');
 
         $this->app->singleton(
             abstract: CacheInterface::class,

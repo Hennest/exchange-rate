@@ -31,24 +31,21 @@ final class ExchangeRateService implements ExchangeRateInterface
      */
     public function rates(array $currencies): array
     {
-        if ($value = $this->cache->get([$this->baseCurrency])) {
-            return $this->parser->parse(
-                response: $value,
-                toCurrencies: $currencies
+        $cacheKey = [$this->baseCurrency];
+
+        if ( ! $rates = $this->cache->get($cacheKey)) {
+            $response = $this->api->fetch();
+
+            $this->cache->put(
+                cacheKey: $cacheKey,
+                value: $response
             );
+
+            $rates = $response;
         }
 
-        $response = $this->api->fetch();
-
-        $this->cache->put(
-            cacheKey: [
-                $this->baseCurrency,
-            ],
-            value: $response,
-        );
-
         return $this->parser->parse(
-            response: $response,
+            response: $rates,
             toCurrencies: $currencies
         );
     }
@@ -84,6 +81,7 @@ final class ExchangeRateService implements ExchangeRateInterface
             ->toScale(
                 scale: $scale ?? $this->scale,
                 roundingMode: RoundingMode::DOWN
-            )->toFloat();
+            )
+            ->toFloat();
     }
 }

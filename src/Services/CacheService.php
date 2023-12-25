@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hennest\ExchangeRate\Services;
 
-use Carbon\Carbon;
 use Closure;
 use Hennest\ExchangeRate\Contracts\CacheInterface;
 use Illuminate\Contracts\Cache\Repository as CacheContract;
@@ -12,11 +11,10 @@ use Psr\SimpleCache\InvalidArgumentException;
 
 final class CacheService implements CacheInterface
 {
-    private const CACHE_LIFE_TIME_IN_HOURS = 6;
-
     public function __construct(
         protected CacheContract $cache,
         protected string $prefix,
+        protected int $ttl
     ) {
     }
 
@@ -48,17 +46,12 @@ final class CacheService implements CacheInterface
         );
     }
 
-    public function put(array $cacheKey, mixed $value, ?int $cacheLifetimeInHours = null): bool
+    public function put(array $cacheKey, mixed $value, ?int $ttl = null): bool
     {
         return $this->cache->put(
             key: $this->cacheKey($cacheKey),
             value: $value,
-            ttl: Carbon::now()->addHours(
-                value: $cacheLifetimeInHours ?? config(
-                    key: 'exchange-rate.cache.ttl',
-                    default: self::CACHE_LIFE_TIME_IN_HOURS
-                )
-            )
+            ttl: $ttl ?? $this->ttl
         );
     }
 
@@ -72,16 +65,11 @@ final class CacheService implements CacheInterface
     /**
      * @param Closure(): array<string, string> $callback
      */
-    public function remember(array $cacheKey, Closure $callback, ?int $cacheLifetimeInHours = null): mixed
+    public function remember(array $cacheKey, Closure $callback, ?int $ttl = null): mixed
     {
         return $this->cache->remember(
             key: $this->cacheKey($cacheKey),
-            ttl: Carbon::now()->addSeconds(
-                value: $cacheLifetimeInHours ?? config(
-                    key: 'exchange-rate.cache.ttl',
-                    default: self::CACHE_LIFE_TIME_IN_HOURS
-                )
-            ),
+            ttl: $ttl ?? $this->ttl,
             callback: $callback
         );
     }

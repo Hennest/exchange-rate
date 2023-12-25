@@ -30,6 +30,17 @@
         "pestphp/pest": "^2.24",
         "phpstan/phpstan": "^1.10"
     },
+    "scripts": {
+        "stan": [
+            "./vendor/bin/phpstan analyse"
+        ],
+        "pest": [
+            "./vendor/bin/pest"
+        ],
+        "pint": [
+            "./vendor/bin/pint"
+        ]
+    },
     "extra": {
         "laravel": {
             "providers": [

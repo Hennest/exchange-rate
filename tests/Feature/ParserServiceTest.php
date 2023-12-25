@@ -5,9 +5,6 @@ declare(strict_types=1);
 use Hennest\ExchangeRate\Contracts\ApiInterface;
 use Hennest\ExchangeRate\Contracts\ParserInterface;
 use Hennest\ExchangeRate\Exceptions\InvalidCurrencyException;
-use Hennest\ExchangeRate\Tests\Feature\Data\ApiData;
-
-beforeEach(fn () => app()->bind(ApiInterface::class, ApiData::class));
 
 it('returns correct format', function (): void {
     $exchangeRateApi = app(ApiInterface::class);
