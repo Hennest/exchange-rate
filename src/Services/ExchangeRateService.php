@@ -75,14 +75,14 @@ final class ExchangeRateService implements ExchangeRateInterface
             ->dividedBy(
                 that: $rates[$fromCurrency],
                 scale: $scale ?? $this->scale,
-                roundingMode: RoundingMode::DOWN
+                roundingMode: RoundingMode::HALF_UP
             );
 
         return BigDecimal::of($amount)
             ->multipliedBy($exchangeRate)
             ->toScale(
                 scale: $scale ?? $this->scale,
-                roundingMode: RoundingMode::DOWN
+                roundingMode: RoundingMode::HALF_UP
             )
             ->toFloat();
     }

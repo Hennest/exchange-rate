@@ -11,7 +11,7 @@ return [
      * 'scale' - length of the mantissa
      */
     'math' => [
-        'scale' => env('EXCHANGE_RATE_SCALE', 2),
+        'scale' => env('EXCHANGE_RATE_SCALE', 10),
     ],
 
     /**
