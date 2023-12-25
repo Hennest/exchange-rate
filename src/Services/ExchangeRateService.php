@@ -74,6 +74,8 @@ final class ExchangeRateService implements ExchangeRateInterface
         $exchangeRate = BigDecimal::of($rates[$toCurrency])
             ->dividedBy(
                 that: $rates[$fromCurrency],
+                scale: $scale ?? $this->scale,
+                roundingMode: RoundingMode::DOWN
             );
 
         return BigDecimal::of($amount)
