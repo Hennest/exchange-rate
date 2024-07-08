@@ -38,6 +38,7 @@ final class ExchangeRateServiceProvider extends ServiceProvider
         /**
          * @var array{
          *     base_currency: string|null,
+         *     api_key: string|null,
          *     math: array{
          *         scale: int|null
          *     },
@@ -99,7 +100,8 @@ final class ExchangeRateServiceProvider extends ServiceProvider
 
         $this->setupApiService(
             api: $driver['api'] ?? CurrencyApiService::class,
-            baseCurrency: $configure['base_currency'] ?? 'USD'
+            baseCurrency: $configure['base_currency'] ?? 'USD',
+            apiKey: $configure['api_key'] ?? 'YOUR_API',
         );
 
         $this->setupExchangeRateService(
@@ -138,11 +140,15 @@ final class ExchangeRateServiceProvider extends ServiceProvider
         );
     }
 
-    private function setupApiService(string $api, string $baseCurrency): void
+    private function setupApiService(string $api, string $baseCurrency, string $apiKey): void
     {
         $this->app->when($api)
             ->needs('$baseCurrency')
             ->give($baseCurrency);
+
+        $this->app->when($api)
+            ->needs('$apiKey')
+            ->give($apiKey);
 
         $this->app->singleton(
             abstract: ApiInterface::class,

@@ -13,6 +13,9 @@ it('fetches exchange rate with valid currency', function (): void {
     app()->when(CurrencyBeaconApiService::class)
         ->needs('$baseCurrency')
         ->giveConfig('exchange-rate.base_currency');
+    app()->when(CurrencyBeaconApiService::class)
+        ->needs('$apiKey')
+        ->give('invalid-api-key');
 
     Http::fake(['*' => Http::response([
         'response' => [
@@ -47,6 +50,9 @@ it('throws an exception if it fails to fetch exchange rate', function (): void {
     app()->when(CurrencyBeaconApiService::class)
         ->needs('$baseCurrency')
         ->giveConfig('exchange-rate.base_currency');
+    app()->when(CurrencyBeaconApiService::class)
+        ->needs('$apiKey')
+        ->give('invalid-api-key');
 
     Http::fake(['*' => Http::response(null, 404)]);
 
