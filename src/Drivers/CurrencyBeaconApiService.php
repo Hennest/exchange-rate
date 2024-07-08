@@ -12,16 +12,17 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Carbon;
 
 /**
- * @see https://github.com/fawazahmed0/exchange-api
+ * @see https://currencybeacon.com
  */
-final class CurrencyApiService implements ApiInterface
+final class CurrencyBeaconApiService implements ApiInterface
 {
-    private const API_URL_TEMPLATE = 'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/%s.min.json';
+    private const API_URL_TEMPLATE = 'https://api.currencybeacon.com/v1/latest?base=%s&api_key=%s';
 
     public function __construct(
-        protected HttpFactory $http,
-        protected ResponseAssemblerInterface $responseAssembler,
-        protected string $baseCurrency,
+        private readonly HttpFactory $http,
+        private readonly ResponseAssemblerInterface $responseAssembler,
+        private string $baseCurrency,
+        private readonly string $apiKey,
     ) {
         $this->baseCurrency = mb_strtolower(
             $baseCurrency
@@ -33,6 +34,7 @@ final class CurrencyApiService implements ApiInterface
         return sprintf(
             self::API_URL_TEMPLATE,
             $this->baseCurrency,
+            $this->apiKey,
         );
     }
 
@@ -46,10 +48,18 @@ final class CurrencyApiService implements ApiInterface
             ->throw()
             ->json();
 
+        /** @var array{
+         *     date: string,
+         *     base: string,
+         *     rates: array<string, float>,
+         * } $responseData
+         */
+        $responseData = $response['response'];
+
         return $this->responseAssembler->create(
-            baseCurrency: array_keys($response)[1],
-            date: new Carbon($response['date']),
-            rates: $response[$this->baseCurrency]
+            baseCurrency: $responseData['base'],
+            date: new Carbon($responseData['date']),
+            rates: $responseData['rates']
         );
     }
 }

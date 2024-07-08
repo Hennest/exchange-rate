@@ -3,7 +3,16 @@
 declare(strict_types=1);
 
 return [
+
+    /**
+     * Base currency for the exchange rate.
+     */
     'base_currency' => env('EXCHANGE_RATE_BASE_CURRENCY', 'USD'),
+
+    /**
+     * API key for the exchange rate service.
+     */
+    'api_key' => env('EXCHANGE_RATE_API_KEY'),
 
     /**
      * Arbitrary Precision Calculator.
@@ -41,5 +50,24 @@ return [
         'cache' => \Hennest\ExchangeRate\Services\CacheService::class,
         'parser' => \Hennest\ExchangeRate\Services\ParserService::class,
         'exchange_rate' => \Hennest\ExchangeRate\Services\ExchangeRateService::class,
-    ]
+    ],
+
+    /**
+     * Default driver.
+     */
+    'default_driver' => 'currency-api',
+
+    /**
+     * List of available drivers.
+     */
+    'drivers' => [
+        'currency-api' => [
+            'api' => \Hennest\ExchangeRate\Drivers\CurrencyApiService::class,
+        ],
+
+        'currency-beacon' => [
+            'api' => \Hennest\ExchangeRate\Drivers\CurrencyBeaconApiService::class,
+        ],
+    ],
+
 ];

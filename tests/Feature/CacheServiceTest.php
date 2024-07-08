@@ -80,6 +80,19 @@ it('can store cache', function (): void {
     expect($exchangeRateCache->get($currencies))->toBe($exchangeRate);
 })->group('exchangeCache');
 
+it('can get or store cache', function (): void {
+    $exchangeRateCache = app(CacheInterface::class);
+    $currencies = [
+        'usd',
+        'eur',
+    ];
+    $exchangeRate = ['usd' => 1.23];
+
+    $exchangeRateCache->remember($currencies, fn () => $exchangeRate);
+
+    expect($exchangeRateCache->get($currencies))->toBe($exchangeRate);
+})->group('exchangeCache');
+
 it('can generate cache key', function (): void {
     $cache = app(CacheInterface::class);
     $reflectionClass = new ReflectionClass($cache);

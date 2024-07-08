@@ -16,5 +16,10 @@
             <directory suffix=".php">./app</directory>
             <directory suffix=".php">./src</directory>
         </include>
+        <exclude>
+            <file>src/Dto/Response.php</file>
+            <file>src/Casts/ResponseCast.php</file>
+            <file>src/Facades/ExchangeRate.php</file>
+        </exclude>
     </source>
 </phpunit>

@@ -4,11 +4,28 @@ declare(strict_types=1);
 
 use Hennest\ExchangeRate\Contracts\ApiInterface;
 use Hennest\ExchangeRate\Contracts\ResponseAssemblerInterface;
-use Hennest\ExchangeRate\Drivers\CurrencyApiService;
+use Hennest\ExchangeRate\Drivers\CurrencyBeaconApiService;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 
 it('fetches exchange rate with valid currency', function (): void {
+    app()->bind(ApiInterface::class, CurrencyBeaconApiService::class);
+    app()->when(CurrencyBeaconApiService::class)
+        ->needs('$baseCurrency')
+        ->giveConfig('exchange-rate.base_currency');
+
+    Http::fake(['*' => Http::response([
+        'response' => [
+            'base' => 'usd',
+            'date' => today(),
+            'rates' => [
+                'usd' => 1.0,
+                'eur' => 0.82,
+                'gbp' => 0.72,
+            ]
+        ],
+    ])]);
+
     $exchangeRateApi = app(ApiInterface::class);
     $response = app(ResponseAssemblerInterface::class);
 
@@ -26,8 +43,8 @@ it('fetches exchange rate with valid currency', function (): void {
 })->group('exchangeApi');
 
 it('throws an exception if it fails to fetch exchange rate', function (): void {
-    app()->bind(ApiInterface::class, CurrencyApiService::class);
-    app()->when(CurrencyApiService::class)
+    app()->bind(ApiInterface::class, CurrencyBeaconApiService::class);
+    app()->when(CurrencyBeaconApiService::class)
         ->needs('$baseCurrency')
         ->giveConfig('exchange-rate.base_currency');
 

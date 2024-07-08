@@ -36,3 +36,13 @@ it('throws exception when currency is unavailable', function (): void {
         )
     );
 })->group('exchangeParser');
+
+it('throws exception when toCurrency is empty', function (): void {
+    $exchangeRateApi = app(ApiInterface::class);
+    $exchangeRateParser = app(ParserInterface::class);
+
+    expect(fn () => $exchangeRateParser->parse($exchangeRateApi->fetch(), []))->toThrow(
+        exception: InvalidArgumentException::class,
+        exceptionMessage: 'The toCurrencies array cannot be empty.'
+    );
+})->group('exchangeParser');

@@ -12,7 +12,13 @@ class ExchangeRateTestCase extends TestCase
 {
     protected function getPackageProviders($app): array
     {
-        $app['config']->set('exchange-rate.services.api', ApiData::class);
+        $app['config']->set('exchange-rate.drivers', [
+            'currency-test' => [
+                'api' => ApiData::class,
+            ],
+        ]);
+
+        $app['config']->set('exchange-rate.default_driver', 'currency-test');
 
         return [
             ExchangeRateServiceProvider::class,

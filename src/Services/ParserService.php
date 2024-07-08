@@ -22,8 +22,14 @@ final class ParserService implements ParserInterface
             );
         }
 
-        $upperExchangeRates = array_change_key_case($response->rates(), CASE_UPPER);
-        $upperCurrencies = array_change_key_case(array_flip($toCurrencies), CASE_UPPER);
+        $upperExchangeRates = array_change_key_case(
+            array: $response->rates(),
+            case: CASE_UPPER
+        );
+        $upperCurrencies = array_change_key_case(
+            array: array_flip($toCurrencies),
+            case: CASE_UPPER
+        );
 
         if ($missingCurrencies = array_diff_key($upperCurrencies, $upperExchangeRates)) {
             throw new InvalidCurrencyException(
@@ -34,9 +40,6 @@ final class ParserService implements ParserInterface
             );
         }
 
-        return array_intersect_key(
-            $upperExchangeRates,
-            $upperCurrencies
-        );
+        return array_intersect_key($upperExchangeRates, $upperCurrencies);
     }
 }
