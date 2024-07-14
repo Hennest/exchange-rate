@@ -8,15 +8,15 @@ use Hennest\ExchangeRate\Casts\ResponseCast;
 use Hennest\ExchangeRate\Contracts\ResponseInterface;
 use Illuminate\Support\Carbon;
 
-final class Response implements ResponseInterface
+final readonly class Response implements ResponseInterface
 {
     /**
      * @param float[]|int[] $rates
      */
     public function __construct(
-        protected readonly string $baseCurrency,
-        protected readonly Carbon $date,
-        protected readonly array $rates,
+        private string $baseCurrency,
+        private Carbon $date,
+        private array  $rates,
     ) {
     }
 

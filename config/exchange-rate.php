@@ -12,7 +12,7 @@ return [
     /**
      * API key for the exchange rate service.
      */
-    'api_key' => env('EXCHANGE_RATE_API_KEY'),
+    'api_key' => env('EXCHANGE_RATE_API_KEY', ''),
 
     /**
      * Arbitrary Precision Calculator.
@@ -39,17 +39,17 @@ return [
      * Builder classes, needed to create DTO.
      */
     'assemblers' => [
-        'response' => \Hennest\ExchangeRate\Assembler\ResponseAssembler::class,
+        'response' => Hennest\ExchangeRate\Assembler\ResponseAssembler::class,
     ],
 
     /**
      * Services that can be overloaded.
      */
     'services' => [
-        'api' => \Hennest\ExchangeRate\Drivers\CurrencyApiService::class,
-        'cache' => \Hennest\ExchangeRate\Services\CacheService::class,
-        'parser' => \Hennest\ExchangeRate\Services\ParserService::class,
-        'exchange_rate' => \Hennest\ExchangeRate\Services\ExchangeRateService::class,
+        'api' => Hennest\ExchangeRate\Drivers\CurrencyApiService::class,
+        'cache' => Hennest\ExchangeRate\Services\CacheService::class,
+        'parser' => Hennest\ExchangeRate\Services\ParserService::class,
+        'exchange_rate' => Hennest\ExchangeRate\Services\ExchangeRateService::class,
     ],
 
     /**
@@ -62,11 +62,11 @@ return [
      */
     'drivers' => [
         'currency-api' => [
-            'api' => \Hennest\ExchangeRate\Drivers\CurrencyApiService::class,
+            'api' => Hennest\ExchangeRate\Drivers\CurrencyApiService::class,
         ],
 
         'currency-beacon' => [
-            'api' => \Hennest\ExchangeRate\Drivers\CurrencyBeaconApiService::class,
+            'api' => Hennest\ExchangeRate\Drivers\CurrencyBeaconApiService::class,
         ],
     ],
 

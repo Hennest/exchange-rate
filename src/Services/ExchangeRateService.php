@@ -14,14 +14,14 @@ use Hennest\ExchangeRate\Contracts\ParserInterface;
 use Hennest\ExchangeRate\Exceptions\InvalidCurrencyException;
 use Illuminate\Http\Client\RequestException;
 
-final class ExchangeRateService implements ExchangeRateInterface
+final readonly class ExchangeRateService implements ExchangeRateInterface
 {
     public function __construct(
-        protected CacheInterface $cache,
-        protected ApiInterface $api,
-        protected ParserInterface $parser,
-        protected string $baseCurrency,
-        protected int $scale,
+        private CacheInterface $cache,
+        private ApiInterface $api,
+        private ParserInterface $parser,
+        private string $baseCurrency,
+        private int $scale,
     ) {
     }
 

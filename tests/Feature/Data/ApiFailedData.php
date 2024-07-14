@@ -19,7 +19,7 @@ final class ApiFailedData implements ApiInterface
     public function fetch(): ResponseInterface
     {
         throw new RequestException(
-            new Response(new \GuzzleHttp\Psr7\Response(200))
+            new Response(new \GuzzleHttp\Psr7\Response(500))
         );
     }
 }

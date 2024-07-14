@@ -9,12 +9,12 @@ use Hennest\ExchangeRate\Contracts\CacheInterface;
 use Illuminate\Contracts\Cache\Repository as CacheContract;
 use Psr\SimpleCache\InvalidArgumentException;
 
-final class CacheService implements CacheInterface
+final readonly class CacheService implements CacheInterface
 {
     public function __construct(
-        protected CacheContract $cache,
-        protected string $prefix,
-        protected int $ttl
+        private CacheContract $cache,
+        private string $prefix,
+        private int $ttl
     ) {
     }
 

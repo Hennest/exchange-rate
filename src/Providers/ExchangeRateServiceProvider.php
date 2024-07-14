@@ -72,14 +72,36 @@ final class ExchangeRateServiceProvider extends ServiceProvider
             concrete: $configure['assemblers']['response'] ?? ResponseAssembler::class
         );
 
-        $this->app->singleton(
-            abstract: ParserInterface::class,
-            concrete: $driver['parser'] ?? ParserService::class
-        );
-
         $this->assignDriver($configure);
     }
 
+    /**
+     * @param array{
+     *     base_currency: string|null,
+     *     api_key: string|null,
+     *     math: array{
+     *         scale: int|null
+     *     },
+     *     services?: array{
+     *         api: class-string|null,
+     *         cache: class-string|null,
+     *         parser: class-string|null,
+     *         exchange_rate: class-string|null,
+     *     },
+     *     default_driver?: string|null,
+     *     drivers: array<string, array{
+     *         api: class-string|null,
+     *         cache: class-string|null,
+     *         parser: class-string|null,
+     *         exchange_rate: class-string|null,
+     *     }>,
+     *     cache?: array{
+     *         driver: string|null,
+     *         prefix: string|null,
+     *         ttl: int|null,
+     *     },
+     * } $configure
+     */
     private function assignDriver(array $configure): void
     {
         /** @var array{
@@ -89,31 +111,39 @@ final class ExchangeRateServiceProvider extends ServiceProvider
          *     exchange_rate: class-string|null,
          * } $driver
          */
-        $driver = $configure['drivers'][$configure['default_driver']] ?? $configure['services'];
+        $driver = config('exchange-rate')['drivers'][$configure['default_driver']] ?? $configure['services'];
+
+        $this->app->singleton(
+            abstract: ParserInterface::class,
+            concrete: $driver['parser'] ?? ParserService::class
+        );
 
         $this->setupCacheService(
-            cache: $driver['cache'] ?? CacheService::class,
+            cacheClass: $driver['cache'] ?? CacheService::class,
             store: $configure['cache']['driver'] ?? 'array',
             prefix: $configure['cache']['prefix'] ?? 'exchange_rate',
             ttl: $configure['cache']['ttl'] ?? 6 * 3600,
         );
 
         $this->setupApiService(
-            api: $driver['api'] ?? CurrencyApiService::class,
+            apiClass: $driver['api'] ?? CurrencyApiService::class,
             baseCurrency: $configure['base_currency'] ?? 'USD',
-            apiKey: $configure['api_key'] ?? 'YOUR_API',
+            apiKey: $configure['api_key'] ?? '',
         );
 
         $this->setupExchangeRateService(
-            exchangeRate: $driver['exchange_rate'] ?? ExchangeRateService::class,
+            exchangeRateClass: $driver['exchange_rate'] ?? ExchangeRateService::class,
             baseCurrency: $configure['base_currency'] ?? 'USD',
             mathScale: $configure['math']['scale'] ?? 10,
         );
     }
 
-    private function setupCacheService(string $cache, string $store, string $prefix, int $ttl): void
+    /**
+     * @param class-string<CacheInterface> $cacheClass
+     */
+    private function setupCacheService(string $cacheClass, string $store, string $prefix, int $ttl): void
     {
-        $this->app->when($cache)
+        $this->app->when($cacheClass)
             ->needs(CacheContract::class)
             ->give(function () use ($store) {
                 /** @var Factory $factory */
@@ -126,49 +156,55 @@ final class ExchangeRateServiceProvider extends ServiceProvider
                 );
             });
 
-        $this->app->when($cache)
+        $this->app->when($cacheClass)
             ->needs('$prefix')
             ->give($prefix);
 
-        $this->app->when($cache)
+        $this->app->when($cacheClass)
             ->needs('$ttl')
             ->give($ttl);
 
         $this->app->singleton(
             abstract: CacheInterface::class,
-            concrete: $cache
+            concrete: $cacheClass
         );
     }
 
-    private function setupApiService(string $api, string $baseCurrency, string $apiKey): void
+    /**
+     * @param class-string<ApiInterface> $apiClass
+     */
+    private function setupApiService(string $apiClass, string $baseCurrency, string $apiKey): void
     {
-        $this->app->when($api)
+        $this->app->when($apiClass)
             ->needs('$baseCurrency')
             ->give($baseCurrency);
 
-        $this->app->when($api)
+        $this->app->when($apiClass)
             ->needs('$apiKey')
             ->give($apiKey);
 
-        $this->app->singleton(
+        $this->app->bind(
             abstract: ApiInterface::class,
-            concrete: $api
+            concrete: $apiClass
         );
     }
 
-    private function setupExchangeRateService(string $exchangeRate, string $baseCurrency, int $mathScale): void
+    /**
+     * @param class-string<ExchangeRateInterface> $exchangeRateClass
+     */
+    private function setupExchangeRateService(string $exchangeRateClass, string $baseCurrency, int $mathScale): void
     {
-        $this->app->when($exchangeRate)
+        $this->app->when($exchangeRateClass)
             ->needs('$baseCurrency')
             ->give($baseCurrency);
 
-        $this->app->when($exchangeRate)
+        $this->app->when($exchangeRateClass)
             ->needs('$scale')
             ->give($mathScale);
 
         $this->app->singleton(
             abstract: ExchangeRateInterface::class,
-            concrete: $exchangeRate
+            concrete: $exchangeRateClass
         );
     }
 }

@@ -19,9 +19,9 @@ final class CurrencyApiService implements ApiInterface
     private const API_URL_TEMPLATE = 'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/%s.min.json';
 
     public function __construct(
-        protected HttpFactory $http,
-        protected ResponseAssemblerInterface $responseAssembler,
-        protected string $baseCurrency,
+        private readonly HttpFactory $http,
+        private readonly ResponseAssemblerInterface $responseAssembler,
+        private string $baseCurrency,
     ) {
         $this->baseCurrency = mb_strtolower(
             $baseCurrency
