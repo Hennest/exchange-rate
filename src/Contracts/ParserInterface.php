@@ -13,11 +13,11 @@ interface ParserInterface
      *
      * @param ResponseInterface $response An instance of ResponseInterface representing exchange rate data.
      *
-     * @param string[] $toCurrencies An array of currency codes for which exchange rates are requested.
+     * @param string[]|null $toCurrencies An array of currency codes for which exchange rates are requested.
      *
      * @return array<string, float|int> An associative array containing exchange rates for the specified currencies.
      *
      * @throws InvalidCurrencyException If an invalid or unsupported currency code is provided.
      */
-    public function parse(ResponseInterface $response, array $toCurrencies): array;
+    public function parse(ResponseInterface $response, array|null $toCurrencies): array;
 }

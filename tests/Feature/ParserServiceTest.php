@@ -22,6 +22,21 @@ it('returns correct format', function (): void {
     ]);
 })->group('exchangeParser');
 
+it('returns all exchange rates if toCurrency is null', function (): void {
+    $exchangeRateApi = app(ApiInterface::class);
+    $exchangeRateParser = app(ParserInterface::class);
+
+    $result = $exchangeRateParser->parse(
+        response: $exchangeRateApi->fetch(),
+    );
+
+    expect($result)->toBe([
+        'USD' => 1.0,
+        'EUR' => 0.82,
+        'GBP' => 0.72,
+    ]);
+})->group('exchangeParser');
+
 it('throws exception when currency is unavailable', function (): void {
     $exchangeRateApi = app(ApiInterface::class);
     $exchangeRateParser = app(ParserInterface::class);
@@ -34,15 +49,5 @@ it('throws exception when currency is unavailable', function (): void {
             "Exchange rate data for currencies '%s' is not available.",
             implode(', ', $toCurrencies)
         )
-    );
-})->group('exchangeParser');
-
-it('throws exception when toCurrency is empty', function (): void {
-    $exchangeRateApi = app(ApiInterface::class);
-    $exchangeRateParser = app(ParserInterface::class);
-
-    expect(fn () => $exchangeRateParser->parse($exchangeRateApi->fetch(), []))->toThrow(
-        exception: InvalidArgumentException::class,
-        exceptionMessage: 'The toCurrencies array cannot be empty.'
     );
 })->group('exchangeParser');

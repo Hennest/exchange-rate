@@ -7,25 +7,23 @@ namespace Hennest\ExchangeRate\Services;
 use Hennest\ExchangeRate\Contracts\ParserInterface;
 use Hennest\ExchangeRate\Contracts\ResponseInterface;
 use Hennest\ExchangeRate\Exceptions\InvalidCurrencyException;
-use InvalidArgumentException;
 
 final class ParserService implements ParserInterface
 {
     /**
      * @throws InvalidCurrencyException
      */
-    public function parse(ResponseInterface $response, array $toCurrencies): array
+    public function parse(ResponseInterface $response, array|null $toCurrencies = null): array
     {
-        if (empty($toCurrencies)) {
-            throw new InvalidArgumentException(
-                message: 'The toCurrencies array cannot be empty.'
-            );
-        }
-
         $upperExchangeRates = array_change_key_case(
             array: $response->rates(),
             case: CASE_UPPER
         );
+
+        if (null === $toCurrencies) {
+            return $upperExchangeRates;
+        }
+
         $upperCurrencies = array_change_key_case(
             array: array_flip($toCurrencies),
             case: CASE_UPPER
