@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace Hennest\ExchangeRate\Services;
 
 use Brick\Math\BigDecimal;
-use Brick\Math\Exception\MathException;
 use Brick\Math\RoundingMode;
 use Hennest\ExchangeRate\Contracts\ApiInterface;
 use Hennest\ExchangeRate\Contracts\CacheInterface;
 use Hennest\ExchangeRate\Contracts\ExchangeRateInterface;
 use Hennest\ExchangeRate\Contracts\ParserInterface;
-use Hennest\ExchangeRate\Exceptions\InvalidCurrencyException;
-use Illuminate\Http\Client\RequestException;
 
 final readonly class ExchangeRateService implements ExchangeRateInterface
 {
@@ -25,19 +22,13 @@ final readonly class ExchangeRateService implements ExchangeRateInterface
     ) {
     }
 
-    /**
-     * @throws InvalidCurrencyException
-     * @throws RequestException
-     */
     public function rates(array $currencies): array
     {
-        $cacheKey = [$this->baseCurrency];
-
-        if ( ! $rates = $this->cache->get($cacheKey)) {
+        if ( ! $rates = $this->cache->get($this->baseCurrency)) {
             $response = $this->api->fetch();
 
             $this->cache->put(
-                cacheKey: $cacheKey,
+                cacheKey: $this->baseCurrency,
                 value: $response
             );
 
@@ -50,25 +41,18 @@ final readonly class ExchangeRateService implements ExchangeRateInterface
         );
     }
 
-    /**
-     * @throws RequestException
-     * @throws InvalidCurrencyException
-     */
     public function getRate(string $currency): float
     {
-        return (float) $this->rates([$currency])[mb_strtoupper($currency)];
+        return (float) $this->rates([$currency])[
+            $this->transformCase($currency)
+        ];
     }
 
-    /**
-     * @throws RequestException
-     * @throws InvalidCurrencyException
-     * @throws MathException
-     */
     public function convert(float|int|string $amount, string $fromCurrency, string $toCurrency, ?int $scale = null): float
     {
         $rates = $this->rates([
-            $fromCurrency = mb_strtoupper($fromCurrency),
-            $toCurrency = mb_strtoupper($toCurrency)
+            $fromCurrency = $this->transformCase($fromCurrency),
+            $toCurrency = $this->transformCase($toCurrency)
         ]);
 
         $exchangeRate = BigDecimal::of($rates[$toCurrency])
@@ -85,5 +69,10 @@ final readonly class ExchangeRateService implements ExchangeRateInterface
                 roundingMode: RoundingMode::HALF_UP
             )
             ->toFloat();
+    }
+
+    private function transformCase(string $currency): string
+    {
+        return mb_strtoupper($currency);
     }
 }

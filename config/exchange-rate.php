@@ -31,7 +31,7 @@ return [
      */
     'cache' => [
         'prefix' => env('EXCHANGE_RATE_CACHE_PREFIX', 'exchange_rate'),
-        'driver' => env('EXCHANGE_RATE_CACHE_DRIVER', env('CACHE_DRIVER')),
+        'driver' => env('EXCHANGE_RATE_CACHE_DRIVER', env('CACHE_STORE', 'file')),
         'ttl' => env('EXCHANGE_RATE_CACHE_TTL', 6 * 3600),
     ],
 

@@ -37,42 +37,19 @@ final class ExchangeRateServiceProvider extends ServiceProvider
 
         /**
          * @var array{
-         *     base_currency: string|null,
-         *     api_key: string|null,
-         *     math: array{
-         *         scale: int|null
-         *     },
-         *     services?: array{
-         *         api: class-string|null,
-         *         cache: class-string|null,
-         *         parser: class-string|null,
-         *         exchange_rate: class-string|null,
-         *     },
          *     assemblers?: array{
          *         response: class-string|null,
          *     },
-         *     cache?: array{
-         *         driver: string|null,
-         *         prefix: string|null,
-         *         ttl: int|null,
-         *     },
-         *     default_driver?: string|null,
-         *     drivers: array<string, array{
-         *          api: class-string|null,
-         *          cache: class-string|null,
-         *          parser: class-string|null,
-         *          exchange_rate: class-string|null,
-         *     }>,
-         * } $configure
+         * } $config
          */
-        $configure = config('exchange-rate', []);
+        $config = config('exchange-rate', []);
 
         $this->app->singleton(
             abstract: ResponseAssemblerInterface::class,
-            concrete: $configure['assemblers']['response'] ?? ResponseAssembler::class
+            concrete: $config['assemblers']['response'] ?? ResponseAssembler::class
         );
 
-        $this->assignDriver($configure);
+        $this->setupServices($config);
     }
 
     /**
@@ -80,68 +57,58 @@ final class ExchangeRateServiceProvider extends ServiceProvider
      *     base_currency: string|null,
      *     api_key: string|null,
      *     math: array{
-     *         scale: int|null
-     *     },
-     *     services?: array{
-     *         api: class-string|null,
-     *         cache: class-string|null,
-     *         parser: class-string|null,
-     *         exchange_rate: class-string|null,
-     *     },
-     *     default_driver?: string|null,
-     *     drivers: array<string, array{
-     *         api: class-string|null,
-     *         cache: class-string|null,
-     *         parser: class-string|null,
-     *         exchange_rate: class-string|null,
-     *     }>,
-     *     cache?: array{
+     *         scale: string|null
+     *     }|null,
+     *     cache: array{
      *         driver: string|null,
      *         prefix: string|null,
-     *         ttl: int|null,
-     *     },
-     * } $configure
+     *         ttl: string|null,
+     *     }|null,
+     * } $config
      */
-    private function assignDriver(array $configure): void
+    private function setupServices(array $config): void
     {
-        /** @var array{
-         *     api: class-string|null,
-         *     cache: class-string|null,
-         *     parser: class-string|null,
-         *     exchange_rate: class-string|null,
-         * } $driver
-         */
-        $driver = config('exchange-rate')['drivers'][$configure['default_driver']] ?? $configure['services'];
+        $services = $this->getServices($config);
 
-        $this->app->singleton(
-            abstract: ParserInterface::class,
-            concrete: $driver['parser'] ?? ParserService::class
+        $this->setupParserService(
+            parserClass: $services['parser'] ?? ParserService::class
         );
 
         $this->setupCacheService(
-            cacheClass: $driver['cache'] ?? CacheService::class,
-            store: $configure['cache']['driver'] ?? 'array',
-            prefix: $configure['cache']['prefix'] ?? 'exchange_rate',
-            ttl: $configure['cache']['ttl'] ?? 6 * 3600,
+            cacheClass: $services['cache'] ?? CacheService::class,
+            store: $config['cache']['driver'] ?? 'array',
+            prefix: $config['cache']['prefix'] ?? 'exchange_rate',
+            ttl: $config['cache']['ttl'] ?? (string) (6 * 3600),
         );
 
         $this->setupApiService(
-            apiClass: $driver['api'] ?? CurrencyApiService::class,
-            baseCurrency: $configure['base_currency'] ?? 'USD',
-            apiKey: $configure['api_key'] ?? '',
+            apiClass: $services['api'] ?? CurrencyApiService::class,
+            baseCurrency: $config['base_currency'] ?? 'USD',
+            apiKey: $config['api_key'] ?? '',
         );
 
         $this->setupExchangeRateService(
-            exchangeRateClass: $driver['exchange_rate'] ?? ExchangeRateService::class,
-            baseCurrency: $configure['base_currency'] ?? 'USD',
-            mathScale: $configure['math']['scale'] ?? 10,
+            exchangeRateClass: $services['exchange_rate'] ?? ExchangeRateService::class,
+            baseCurrency: $config['base_currency'] ?? 'USD',
+            mathScale: $config['math']['scale'] ?? '10',
+        );
+    }
+
+    /**
+     * @param class-string<ParserInterface> $parserClass
+     */
+    public function setupParserService(string $parserClass): void
+    {
+        $this->app->singleton(
+            abstract: ParserInterface::class,
+            concrete: $parserClass
         );
     }
 
     /**
      * @param class-string<CacheInterface> $cacheClass
      */
-    private function setupCacheService(string $cacheClass, string $store, string $prefix, int $ttl): void
+    private function setupCacheService(string $cacheClass, string $store, string $prefix, string $ttl): void
     {
         $this->app->when($cacheClass)
             ->needs(CacheContract::class)
@@ -192,7 +159,7 @@ final class ExchangeRateServiceProvider extends ServiceProvider
     /**
      * @param class-string<ExchangeRateInterface> $exchangeRateClass
      */
-    private function setupExchangeRateService(string $exchangeRateClass, string $baseCurrency, int $mathScale): void
+    private function setupExchangeRateService(string $exchangeRateClass, string $baseCurrency, string $mathScale): void
     {
         $this->app->when($exchangeRateClass)
             ->needs('$baseCurrency')
@@ -206,5 +173,23 @@ final class ExchangeRateServiceProvider extends ServiceProvider
             abstract: ExchangeRateInterface::class,
             concrete: $exchangeRateClass
         );
+    }
+
+    /**
+     * @param array{
+     *     default_driver: string|null,
+     *     drivers: array<string, array<string, class-string|null>>|null,
+     *     services: array<string, class-string|null>|null
+     * } $config
+     * @return array{
+     *     api: class-string<ApiInterface>|null,
+     *     cache: class-string<CacheInterface>|null,
+     *     parser: class-string<ParserInterface>|null,
+     *     exchange_rate: class-string<ExchangeRateInterface>|null,
+     * }
+     */
+    public function getServices(array $config): array
+    {
+        return $config['drivers'][$config['default_driver']] ?? $config['services'];
     }
 }

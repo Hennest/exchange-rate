@@ -10,9 +10,6 @@ use Hennest\ExchangeRate\Exceptions\InvalidCurrencyException;
 
 final class ParserService implements ParserInterface
 {
-    /**
-     * @throws InvalidCurrencyException
-     */
     public function parse(ResponseInterface $response, array|null $toCurrencies = null): array
     {
         $upperExchangeRates = array_change_key_case(

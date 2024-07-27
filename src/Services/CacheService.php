@@ -7,7 +7,6 @@ namespace Hennest\ExchangeRate\Services;
 use Closure;
 use Hennest\ExchangeRate\Contracts\CacheInterface;
 use Illuminate\Contracts\Cache\Repository as CacheContract;
-use Psr\SimpleCache\InvalidArgumentException;
 
 final readonly class CacheService implements CacheInterface
 {
@@ -18,35 +17,21 @@ final readonly class CacheService implements CacheInterface
     ) {
     }
 
-    /**
-     * @param string[] $cacheKey
-     */
-    private function cacheKey(array $cacheKey): string
-    {
-        return $this->prefix . "." . implode('.', $cacheKey);
-    }
-
-    /**
-     * @throws InvalidArgumentException
-     */
-    public function exist(array $cacheKey): bool
+    public function exist(string $cacheKey): bool
     {
         return $this->cache->has(
             $this->cacheKey($cacheKey)
         );
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
-    public function get(array $cacheKey): mixed
+    public function get(string $cacheKey): mixed
     {
         return $this->cache->get(
             $this->cacheKey($cacheKey)
         );
     }
 
-    public function put(array $cacheKey, mixed $value, ?int $ttl = null): bool
+    public function put(string $cacheKey, mixed $value, ?int $ttl = null): bool
     {
         return $this->cache->put(
             key: $this->cacheKey($cacheKey),
@@ -55,7 +40,7 @@ final readonly class CacheService implements CacheInterface
         );
     }
 
-    public function forget(array $cacheKey): bool
+    public function forget(string $cacheKey): bool
     {
         return $this->cache->forget(
             $this->cacheKey($cacheKey)
@@ -65,12 +50,17 @@ final readonly class CacheService implements CacheInterface
     /**
      * @param Closure(): array<string, string> $callback
      */
-    public function remember(array $cacheKey, Closure $callback, ?int $ttl = null): mixed
+    public function remember(string $cacheKey, Closure $callback, ?int $ttl = null): mixed
     {
         return $this->cache->remember(
             key: $this->cacheKey($cacheKey),
             ttl: $ttl ?? $this->ttl,
             callback: $callback
         );
+    }
+
+    private function cacheKey(string $cacheKey): string
+    {
+        return $this->prefix . "." . $cacheKey;
     }
 }

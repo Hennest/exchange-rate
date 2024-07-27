@@ -11,8 +11,6 @@ interface ParserInterface
     /**
      * Parse exchange rate data for the specified currencies.
      *
-     * @param ResponseInterface $response An instance of ResponseInterface representing exchange rate data.
-     *
      * @param string[]|null $toCurrencies An array of currency codes for which exchange rates are requested.
      *
      * @return array<string, float|int> An associative array containing exchange rates for the specified currencies.

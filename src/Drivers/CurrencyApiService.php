@@ -8,7 +8,6 @@ use Hennest\ExchangeRate\Contracts\ApiInterface;
 use Hennest\ExchangeRate\Contracts\ResponseAssemblerInterface;
 use Hennest\ExchangeRate\Contracts\ResponseInterface;
 use Illuminate\Http\Client\Factory as HttpFactory;
-use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Carbon;
 
 /**
@@ -36,9 +35,6 @@ final class CurrencyApiService implements ApiInterface
         );
     }
 
-    /**
-     * @throws RequestException
-     */
     public function fetch(): ResponseInterface
     {
         $response = (array) $this->http

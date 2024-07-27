@@ -22,4 +22,11 @@
             <file>src/Facades/ExchangeRate.php</file>
         </exclude>
     </source>
+    <php>
+        <env name="EXCHANGE_RATE_BASE_CURRENCY" value="USD"/>
+        <env name="EXCHANGE_RATE_SCALE" value="10"/>
+        <env name="EXCHANGE_RATE_CACHE_PREFIX" value="test_exchange_rate_prefix"/>
+        <env name="EXCHANGE_RATE_CACHE_DRIVER" value="array"/>
+        <env name="EXCHANGE_RATE_CACHE_TTL" value="30" />
+    </php>
 </phpunit>
