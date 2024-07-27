@@ -16,6 +16,18 @@ it('returns exchange rates', function (): void {
     ]);
 })->group('exchangeService');
 
+it('returns all exchange rates when currencies parameter is not provided', function (): void {
+    $exchangeRateService = app(ExchangeRateInterface::class);
+
+    $result = $exchangeRateService->rates();
+
+    expect($result)->toBe([
+        'USD' => 1.0,
+        'EUR' => 0.82,
+        'GBP' => 0.72,
+    ]);
+})->group('exchangeService');
+
 it('returns exchange rate for a given currency', function (): void {
     $exchangeRateService = app(ExchangeRateInterface::class);
 

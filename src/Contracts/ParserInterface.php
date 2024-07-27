@@ -17,5 +17,5 @@ interface ParserInterface
      *
      * @throws InvalidCurrencyException If an invalid or unsupported currency code is provided.
      */
-    public function parse(ResponseInterface $response, array|null $toCurrencies): array;
+    public function parse(ResponseInterface $response, array|null $toCurrencies = null): array;
 }

@@ -22,7 +22,7 @@ final readonly class ExchangeRateService implements ExchangeRateInterface
     ) {
     }
 
-    public function rates(array $currencies): array
+    public function rates(array|null $currencies = null): array
     {
         if ( ! $rates = $this->cache->get($this->baseCurrency)) {
             $response = $this->api->fetch();

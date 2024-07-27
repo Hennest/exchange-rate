@@ -24,7 +24,7 @@ interface ExchangeRateInterface
      * @throws InvalidCurrencyException If an invalid currency is provided in the list.
      * @throws RequestException If the request to the API fails.
      */
-    public function rates(array $currencies): array;
+    public function rates(array|null $currencies = null): array;
 
     /**
      * Get the exchange rate for a specific currency relative to the base currency.
