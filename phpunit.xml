@@ -28,5 +28,6 @@
         <env name="EXCHANGE_RATE_CACHE_PREFIX" value="test_exchange_rate_prefix"/>
         <env name="EXCHANGE_RATE_CACHE_DRIVER" value="array"/>
         <env name="EXCHANGE_RATE_CACHE_TTL" value="30" />
+        <env name="EXCHANGE_RATE_DRIVER" value="currency-api" />
     </php>
 </phpunit>

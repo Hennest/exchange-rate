@@ -55,7 +55,7 @@ return [
     /**
      * Default driver.
      */
-    'default_driver' => 'currency-api',
+    'default_driver' => env('EXCHANGE_RATE_DRIVER', 'currency-api'),
 
     /**
      * List of available drivers.
