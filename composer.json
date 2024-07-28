@@ -45,9 +45,6 @@
         "laravel": {
             "providers": [
                 "Hennest\\ExchangeRate\\Providers\\ExchangeRateServiceProvider"
-            ],
-            "aliases": [
-                "Hennest\\ExchangeRate\\Facades\\ExchangeRate"
             ]
         }
     },

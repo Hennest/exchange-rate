@@ -49,16 +49,32 @@ use Hennest\ExchangeRate\Contracts\ExchangeRateInterface;
 
 class ExampleController
 {
-    public function example(ExchangeRateInterface $exchangeRate)
+    public function __construct(
+        private ExchangeRateInterface $exchangeRate
+    ) {}
+
+    public function example()
     {
         // Get exchange rates for specific currencies
-        $rates = $exchangeRate->rates(['EUR', 'GBP', 'JPY']);
+        $rates = $this->exchangeRate->rates(['EUR', 'GBP', 'JPY']);
 
         // Get a single exchange rate
-        $rate = $exchangeRate->getRate('EUR');
+        $rate = $this->exchangeRate->getRate('EUR');
 
         // Convert currency
-        $convertedAmount = $exchangeRate->convert(100, 'USD', 'EUR');
+        $convertedAmount = $this->exchangeRate->convert(100, 'USD', 'EUR');
+    }
+    
+    public function anotherExample()
+    {
+        // Get exchange rates for specific currencies
+        $rates = app(ExchangeRateInterface::class)->rates(['EUR', 'GBP', 'JPY']);
+
+        // Get a single exchange rate
+        $rate = app(ExchangeRateInterface::class)->getRate('EUR');
+
+        // Convert currency
+        $convertedAmount = app(ExchangeRateInterface::class)->convert(100, 'USD', 'EUR');
     }
 }
 ```
