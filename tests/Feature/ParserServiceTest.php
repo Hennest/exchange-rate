@@ -22,7 +22,7 @@ it('returns correct format', function (): void {
     ]);
 })->group('exchangeParser');
 
-it('returns all exchange rates if toCurrency is null', function (): void {
+it('returns all exchange rates if toCurrency is not set', function (): void {
     $exchangeRateApi = app(ApiInterface::class);
     $exchangeRateParser = app(ParserInterface::class);
 

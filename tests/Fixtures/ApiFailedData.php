@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hennest\ExchangeRate\Tests\Feature\Data;
+namespace Hennest\ExchangeRate\Tests\Fixtures;
 
 use Hennest\ExchangeRate\Contracts\ApiInterface;
 use Hennest\ExchangeRate\Contracts\ResponseAssemblerInterface;

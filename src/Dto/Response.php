@@ -16,7 +16,7 @@ final readonly class Response implements ResponseInterface
     public function __construct(
         private string $baseCurrency,
         private Carbon $date,
-        private array  $rates,
+        private array $rates,
     ) {
     }
 
@@ -53,7 +53,7 @@ final readonly class Response implements ResponseInterface
     {
         return [
             'base' => $this->baseCurrency,
-            'date' => $this->date,
+            'date' => $this->date->toDateTimeString(),
             'rates' => $this->rates
         ];
     }

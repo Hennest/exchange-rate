@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Hennest\ExchangeRate\Tests;
 
 use Hennest\ExchangeRate\Providers\ExchangeRateServiceProvider;
-use Hennest\ExchangeRate\Tests\Feature\Data\ApiData;
+use Hennest\ExchangeRate\Tests\Fixtures\ApiData;
 use Orchestra\Testbench\TestCase;
 
 class ExchangeRateTestCase extends TestCase
