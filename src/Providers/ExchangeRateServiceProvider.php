@@ -98,7 +98,6 @@ final class ExchangeRateServiceProvider extends ServiceProvider
 
         $this->setupExchangeRateService(
             exchangeRateClass: $services['exchange_rate'] ?? ExchangeRateService::class,
-            baseCurrency: $config['base_currency'] ?? 'USD',
         );
     }
 
@@ -186,12 +185,8 @@ final class ExchangeRateServiceProvider extends ServiceProvider
     /**
      * @param class-string<ExchangeRateInterface> $exchangeRateClass
      */
-    private function setupExchangeRateService(string $exchangeRateClass, string $baseCurrency): void
+    private function setupExchangeRateService(string $exchangeRateClass): void
     {
-        $this->app->when($exchangeRateClass)
-            ->needs('$baseCurrency')
-            ->give($baseCurrency);
-
         $this->app->singleton(
             abstract: ExchangeRateInterface::class,
             concrete: $exchangeRateClass

@@ -20,20 +20,15 @@ final class CurrencyBeaconApiService implements ApiInterface
     public function __construct(
         private readonly HttpFactory $http,
         private readonly ResponseAssemblerInterface $responseAssembler,
-        private string $baseCurrency,
+        private readonly string $baseCurrency,
         private readonly string $apiKey,
     ) {
-        $this->baseCurrency = mb_strtolower(
-            $baseCurrency
-        );
     }
 
-    private function buildApiUrl(): string
+    public function baseCurrency(): string
     {
-        return sprintf(
-            self::API_URL_TEMPLATE,
-            $this->baseCurrency,
-            $this->apiKey,
+        return mb_strtolower(
+            $this->baseCurrency
         );
     }
 
@@ -56,6 +51,15 @@ final class CurrencyBeaconApiService implements ApiInterface
             baseCurrency: $responseData['base'],
             date: new Carbon($responseData['date']),
             rates: $responseData['rates']
+        );
+    }
+
+    private function buildApiUrl(): string
+    {
+        return sprintf(
+            self::API_URL_TEMPLATE,
+            $this->baseCurrency(),
+            $this->apiKey,
         );
     }
 }

@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace Hennest\ExchangeRate\Contracts;
 
- use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 
 interface ApiInterface
 {
+    /**
+     * Get the base currency code.
+     */
+    public function baseCurrency(): string;
+
     /**
      * Fetch exchange rate data from the API.
      *

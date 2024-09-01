@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
- namespace Hennest\ExchangeRate\Tests\Fixtures;
+namespace Hennest\ExchangeRate\Tests\Fixtures;
 
 use Hennest\ExchangeRate\Contracts\ApiInterface;
 use Hennest\ExchangeRate\Contracts\ResponseAssemblerInterface;
@@ -12,6 +12,11 @@ final class ApiData implements ApiInterface
 {
     public function __construct(protected ResponseAssemblerInterface $responseAssembler)
     {
+    }
+
+    public function baseCurrency(): string
+    {
+        return 'usd';
     }
 
     public function fetch(): ResponseInterface

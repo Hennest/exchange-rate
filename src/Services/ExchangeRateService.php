@@ -17,17 +17,16 @@ final readonly class ExchangeRateService implements ExchangeRateInterface
         private CacheInterface $cache,
         private ConverterInterface $converter,
         private ParserInterface $parser,
-        private string $baseCurrency,
     ) {
     }
 
     public function rates(array|null $currencies = null): array
     {
-        if ( ! $rates = $this->cache->get($this->baseCurrency)) {
+        if ( ! $rates = $this->cache->get($this->api->baseCurrency())) {
             $response = $this->api->fetch();
 
             $this->cache->put(
-                cacheKey: $this->baseCurrency,
+                cacheKey: $this->api->baseCurrency(),
                 value: $response
             );
 

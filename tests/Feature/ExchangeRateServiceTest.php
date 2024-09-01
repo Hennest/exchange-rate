@@ -22,6 +22,11 @@ it('returns exchange rates', function (): void {
 
 it('returns exchange rates from cache if available', function (): void {
     $apiData = new class implements ApiInterface {
+        public function baseCurrency(): string
+        {
+            return 'USD';
+        }
+
         public function fetch(): ResponseInterface
         {
             throw new Exception('This method should not be called');
@@ -30,7 +35,7 @@ it('returns exchange rates from cache if available', function (): void {
     app()->bind(ApiInterface::class, $apiData::class);
 
     $response = app(ResponseAssemblerInterface::class)->create(
-        baseCurrency: 'usd',
+        baseCurrency: 'USD',
         date: today(),
         rates: [
             'usd' => 1.0,
