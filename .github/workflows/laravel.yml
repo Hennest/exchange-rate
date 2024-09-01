@@ -35,7 +35,7 @@ jobs:
           coverage: none
 
       - name: Install composer
-        run: composer install --no-interaction --no-scripts --no-suggest
+        run: composer install --no-interaction --no-scripts
 
       - name: Execute tests
         run: vendor/bin/pest
