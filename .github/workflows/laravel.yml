@@ -17,11 +17,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
       - name: Cache composer
         uses: actions/cache@v3
         with:
-          path: ~/.composer/cache/files
-          key: php-${{ matrix.php }}-composer-${{ hashFiles('composer.json', 'composer.lock') }}
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -31,12 +35,7 @@ jobs:
           coverage: none
 
       - name: Install composer
-        run: composer install --no-interaction --no-scripts --no-suggest
+        run: composer install --no-interaction --no-scripts
 
       - name: Execute tests
         run: vendor/bin/pest
-
-      - name: Debug cache
-        run: |
-          ls -la ~/.composer/cache/files
-          composer config -g cache-dir
