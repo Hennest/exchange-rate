@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace Hennest\ExchangeRate\Services;
 
-use Brick\Math\BigDecimal;
-use Brick\Math\RoundingMode;
 use Hennest\ExchangeRate\Contracts\ApiInterface;
 use Hennest\ExchangeRate\Contracts\CacheInterface;
+use Hennest\ExchangeRate\Contracts\ConverterInterface;
 use Hennest\ExchangeRate\Contracts\ExchangeRateInterface;
 use Hennest\ExchangeRate\Contracts\ParserInterface;
 
 final readonly class ExchangeRateService implements ExchangeRateInterface
 {
     public function __construct(
-        private CacheInterface $cache,
         private ApiInterface $api,
+        private CacheInterface $cache,
+        private ConverterInterface $converter,
         private ParserInterface $parser,
         private string $baseCurrency,
-        private int $scale,
     ) {
     }
 
@@ -48,27 +47,19 @@ final readonly class ExchangeRateService implements ExchangeRateInterface
         ];
     }
 
-    public function convert(float|int|string $amount, string $fromCurrency, string $toCurrency, ?int $scale = null): float
+    public function convert(float|int|string $amount, string $fromCurrency, string $toCurrency, int|null $scale = null): float
     {
         $rates = $this->rates([
             $fromCurrency = $this->transformCase($fromCurrency),
             $toCurrency = $this->transformCase($toCurrency)
         ]);
 
-        $exchangeRate = BigDecimal::of($rates[$toCurrency])
-            ->dividedBy(
-                that: $rates[$fromCurrency],
-                scale: $scale ?? $this->scale,
-                roundingMode: RoundingMode::HALF_UP
-            );
-
-        return BigDecimal::of($amount)
-            ->multipliedBy($exchangeRate)
-            ->toScale(
-                scale: $scale ?? $this->scale,
-                roundingMode: RoundingMode::HALF_UP
-            )
-            ->toFloat();
+        return $this->converter->convert(
+            amount: $amount,
+            fromRate: $rates[$fromCurrency],
+            toRate: $rates[$toCurrency],
+            scale: $scale
+        );
     }
 
     private function transformCase(string $currency): string

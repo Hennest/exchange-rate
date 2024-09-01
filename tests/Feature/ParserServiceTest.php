@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Hennest\ExchangeRate\Contracts\ApiInterface;
 use Hennest\ExchangeRate\Contracts\ParserInterface;
 use Hennest\ExchangeRate\Exceptions\InvalidCurrencyException;
+use Hennest\ExchangeRate\Services\ParserService;
 
 it('returns correct format', function (): void {
     $exchangeRateApi = app(ApiInterface::class);
@@ -19,6 +20,24 @@ it('returns correct format', function (): void {
         'USD' => 1.0,
         'EUR' => 0.82,
         'GBP' => 0.72,
+    ]);
+})->group('exchangeParser');
+
+it('returns the correct case for currency keys', function (): void {
+    app()->when(ParserService::class)->needs('$toCase')->give(CASE_LOWER);
+
+    $exchangeRateApi = app(ApiInterface::class);
+    $exchangeRateParser = app(ParserInterface::class);
+
+    $result = $exchangeRateParser->parse(
+        response: $exchangeRateApi->fetch(),
+        toCurrencies: ['usd', 'eur', 'gbp']
+    );
+
+    expect($result)->toBe([
+        'usd' => 1.0,
+        'eur' => 0.82,
+        'gbp' => 0.72,
     ]);
 })->group('exchangeParser');
 

@@ -24,6 +24,14 @@ return [
     ],
 
     /**
+     * Parser case.
+     *
+     * CASE_UPPER or 1 - all currency keys will be converted to uppercase
+     * CASE_LOWER or 0 - all currency keys will be converted to lowercase
+     */
+    'parser_case' => env('EXCHANGE_RATE_PARSER_CASE', CASE_UPPER),
+
+    /**
      * Storage of the state of the exchange rates.
      *
      * Supported drivers: same as laravel cache
@@ -49,6 +57,7 @@ return [
         'api' => Hennest\ExchangeRate\Drivers\CurrencyApiService::class,
         'cache' => Hennest\ExchangeRate\Services\CacheService::class,
         'parser' => Hennest\ExchangeRate\Services\ParserService::class,
+        'converter' => Hennest\ExchangeRate\Services\ConverterService::class,
         'exchange_rate' => Hennest\ExchangeRate\Services\ExchangeRateService::class,
     ],
 

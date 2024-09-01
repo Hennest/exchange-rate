@@ -8,13 +8,18 @@ use Hennest\ExchangeRate\Contracts\ParserInterface;
 use Hennest\ExchangeRate\Contracts\ResponseInterface;
 use Hennest\ExchangeRate\Exceptions\InvalidCurrencyException;
 
-final class ParserService implements ParserInterface
+final readonly class ParserService implements ParserInterface
 {
+    public function __construct(
+        private int $toCase
+    ) {
+    }
+
     public function parse(ResponseInterface $response, array|null $toCurrencies = null): array
     {
         $upperExchangeRates = array_change_key_case(
             array: $response->rates(),
-            case: CASE_UPPER
+            case: $this->toCase
         );
 
         if (null === $toCurrencies) {
@@ -23,7 +28,7 @@ final class ParserService implements ParserInterface
 
         $upperCurrencies = array_change_key_case(
             array: array_flip($toCurrencies),
-            case: CASE_UPPER
+            case: $this->toCase
         );
 
         if ($missingCurrencies = array_diff_key($upperCurrencies, $upperExchangeRates)) {

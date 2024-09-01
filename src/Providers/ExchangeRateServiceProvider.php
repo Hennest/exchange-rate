@@ -7,11 +7,13 @@ namespace Hennest\ExchangeRate\Providers;
 use Hennest\ExchangeRate\Assembler\ResponseAssembler;
 use Hennest\ExchangeRate\Contracts\ApiInterface;
 use Hennest\ExchangeRate\Contracts\CacheInterface;
+use Hennest\ExchangeRate\Contracts\ConverterInterface;
 use Hennest\ExchangeRate\Contracts\ExchangeRateInterface;
 use Hennest\ExchangeRate\Contracts\ParserInterface;
 use Hennest\ExchangeRate\Contracts\ResponseAssemblerInterface;
 use Hennest\ExchangeRate\Drivers\CurrencyApiService;
 use Hennest\ExchangeRate\Services\CacheService;
+use Hennest\ExchangeRate\Services\ConverterService;
 use Hennest\ExchangeRate\Services\ExchangeRateService;
 use Hennest\ExchangeRate\Services\ParserService;
 use Illuminate\Contracts\Cache\Factory;
@@ -56,6 +58,7 @@ final class ExchangeRateServiceProvider extends ServiceProvider
      * @param array{
      *     base_currency: string|null,
      *     api_key: string|null,
+     *     parser_case: int|null,
      *     math: array{
      *         scale: string|null
      *     }|null,
@@ -70,8 +73,14 @@ final class ExchangeRateServiceProvider extends ServiceProvider
     {
         $services = $this->getServices($config);
 
+        $this->setupConverterService(
+            converterClass: $services['converter'] ?? ConverterService::class,
+            mathScale: $config['math']['scale'] ?? '10',
+        );
+
         $this->setupParserService(
-            parserClass: $services['parser'] ?? ParserService::class
+            parserClass: $services['parser'] ?? ParserService::class,
+            toCase: $config['parser_case'] ?? CASE_UPPER
         );
 
         $this->setupCacheService(
@@ -90,15 +99,33 @@ final class ExchangeRateServiceProvider extends ServiceProvider
         $this->setupExchangeRateService(
             exchangeRateClass: $services['exchange_rate'] ?? ExchangeRateService::class,
             baseCurrency: $config['base_currency'] ?? 'USD',
-            mathScale: $config['math']['scale'] ?? '10',
+        );
+    }
+
+    /**
+     * @param class-string<ConverterInterface> $converterClass
+     */
+    public function setupConverterService(string $converterClass, string $mathScale): void
+    {
+        $this->app->when($converterClass)
+            ->needs('$scale')
+            ->give($mathScale);
+
+        $this->app->singleton(
+            abstract: ConverterInterface::class,
+            concrete: $converterClass
         );
     }
 
     /**
      * @param class-string<ParserInterface> $parserClass
      */
-    public function setupParserService(string $parserClass): void
+    public function setupParserService(string $parserClass, int $toCase): void
     {
+        $this->app->when($parserClass)
+            ->needs('$toCase')
+            ->give($toCase);
+
         $this->app->singleton(
             abstract: ParserInterface::class,
             concrete: $parserClass
@@ -159,15 +186,11 @@ final class ExchangeRateServiceProvider extends ServiceProvider
     /**
      * @param class-string<ExchangeRateInterface> $exchangeRateClass
      */
-    private function setupExchangeRateService(string $exchangeRateClass, string $baseCurrency, string $mathScale): void
+    private function setupExchangeRateService(string $exchangeRateClass, string $baseCurrency): void
     {
         $this->app->when($exchangeRateClass)
             ->needs('$baseCurrency')
             ->give($baseCurrency);
-
-        $this->app->when($exchangeRateClass)
-            ->needs('$scale')
-            ->give($mathScale);
 
         $this->app->singleton(
             abstract: ExchangeRateInterface::class,
@@ -185,6 +208,7 @@ final class ExchangeRateServiceProvider extends ServiceProvider
      *     api: class-string<ApiInterface>|null,
      *     cache: class-string<CacheInterface>|null,
      *     parser: class-string<ParserInterface>|null,
+     *     converter: class-string<ConverterInterface>|null,
      *     exchange_rate: class-string<ExchangeRateInterface>|null,
      * }
      */
