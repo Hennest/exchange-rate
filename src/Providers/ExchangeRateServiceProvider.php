@@ -75,7 +75,7 @@ final class ExchangeRateServiceProvider extends ServiceProvider
 
         $this->setupConverterService(
             converterClass: $services['converter'] ?? ConverterService::class,
-            mathScale: $config['math']['scale'] ?? '10',
+            mathScale: (int) ($config['math']['scale'] ?? 10),
         );
 
         $this->setupParserService(
@@ -87,7 +87,7 @@ final class ExchangeRateServiceProvider extends ServiceProvider
             cacheClass: $services['cache'] ?? CacheService::class,
             store: $config['cache']['driver'] ?? 'array',
             prefix: $config['cache']['prefix'] ?? 'exchange_rate',
-            ttl: $config['cache']['ttl'] ?? (string) (6 * 3600),
+            ttl: (int) $config['cache']['ttl'] ?? (6 * 3600),
         );
 
         $this->setupApiService(
@@ -104,7 +104,7 @@ final class ExchangeRateServiceProvider extends ServiceProvider
     /**
      * @param class-string<ConverterInterface> $converterClass
      */
-    public function setupConverterService(string $converterClass, string $mathScale): void
+    public function setupConverterService(string $converterClass, int $mathScale): void
     {
         $this->app->when($converterClass)
             ->needs('$scale')
@@ -134,7 +134,7 @@ final class ExchangeRateServiceProvider extends ServiceProvider
     /**
      * @param class-string<CacheInterface> $cacheClass
      */
-    private function setupCacheService(string $cacheClass, string $store, string $prefix, string $ttl): void
+    private function setupCacheService(string $cacheClass, string $store, string $prefix, int $ttl): void
     {
         $this->app->when($cacheClass)
             ->needs(CacheContract::class)
