@@ -11,17 +11,17 @@ jobs:
 
     strategy:
       matrix:
-        php: ['8.2']
+        php: ['8.2', '8.3']
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
       - name: Cache composer
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/.composer/cache/files
-          key: php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
+          key: php-${{ matrix.php }}-composer-${{ hashFiles('composer.json', 'composer.lock') }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -31,7 +31,12 @@ jobs:
           coverage: none
 
       - name: Install composer
-        run: composer install --no-interaction --no-scripts --no-suggest --prefer-source
+        run: composer install --no-interaction --no-scripts --no-suggest
 
       - name: Execute tests
         run: vendor/bin/pest
+
+      - name: Debug cache
+        run: |
+          ls -la ~/.composer/cache/files
+          composer config -g cache-dir
