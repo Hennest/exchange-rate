@@ -39,8 +39,3 @@ jobs:
 
       - name: Execute tests
         run: vendor/bin/pest
-
-      - name: Debug Composer cache
-        run: |
-          composer config -g cache-dir
-          ls -la $(composer config -g cache-dir)
