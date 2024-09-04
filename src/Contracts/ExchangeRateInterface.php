@@ -8,7 +8,6 @@ use Brick\Math\Exception\MathException;
 use Hennest\ExchangeRate\Exceptions\InvalidCurrencyException;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
-use Psr\SimpleCache\InvalidArgumentException;
 
 interface ExchangeRateInterface
 {
@@ -20,7 +19,6 @@ interface ExchangeRateInterface
      * @return array<string, float|int> An associative array where currency codes are keys, and exchange rates are values.
      *
      * @throws ConnectionException If the request to the API fails.
-     * @throws InvalidArgumentException MUST be thrown if the cache $key string is not a legal value.
      * @throws InvalidCurrencyException If an invalid currency is provided in the list.
      * @throws RequestException If the request to the API fails.
      */
@@ -30,7 +28,6 @@ interface ExchangeRateInterface
      * Get the exchange rate for a specific currency relative to the base currency.
      *
      * @throws ConnectionException If the request to the API fails.
-     * @throws InvalidArgumentException MUST be thrown if the cache $key string is not a legal value.
      * @throws InvalidCurrencyException If an invalid currency code is provided.
      * @throws RequestException If the request to the API fails.
      */
@@ -43,7 +40,6 @@ interface ExchangeRateInterface
      *                        it uses the default scale or a custom scale from the configuration.
      *
      * @throws ConnectionException If the request to the API fails.
-     * @throws InvalidArgumentException MUST be thrown if the cache $key string is not a legal value.
      * @throws InvalidCurrencyException If an invalid currency code is provided.
      * @throws MathException If a mathematical operation fails during conversion.
      * @throws RequestException If the request to the API fails.

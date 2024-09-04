@@ -5,21 +5,16 @@ declare(strict_types=1);
 namespace Hennest\ExchangeRate\Contracts;
 
 use Closure;
-use Psr\SimpleCache\InvalidArgumentException;
 
 interface CacheInterface
 {
     /**
      * Checks if the specified cache key exists in the cache.
-     *
-     * @throws InvalidArgumentException MUST be thrown if the $key string is not a legal value.
      */
     public function exist(string $cacheKey): bool;
 
     /**
      * Retrieves a cached value for the specified cache key.
-     *
-     * @throws InvalidArgumentException MUST be thrown if the $key string is not a legal value.
      */
     public function get(string $cacheKey): mixed;
 
