@@ -16,8 +16,9 @@ use UnexpectedValueException;
  */
 final readonly class ResponseCast implements CastsAttributes
 {
-    public function __construct(private ResponseAssemblerInterface $responseAssembler)
-    {
+    public function __construct(
+        private ResponseAssemblerInterface $responseAssembler
+    ) {
     }
 
     public function get(Model $model, string $key, mixed $value, array $attributes): ResponseInterface
@@ -51,9 +52,9 @@ final readonly class ResponseCast implements CastsAttributes
         }
 
         return (string) json_encode([
-            'base' => $value->baseCurrency(),
-            'date' => $value->date(),
-            'rates' => $value->rates(),
+            'base' => $value->baseCurrency,
+            'date' => $value->date,
+            'rates' => $value->rates,
         ]);
     }
 }

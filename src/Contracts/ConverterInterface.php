@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hennest\ExchangeRate\Contracts;
 
+use BcMath\Number;
 use Brick\Math\Exception\DivisionByZeroException;
 use Brick\Math\Exception\MathException;
 use Brick\Math\Exception\NumberFormatException;
@@ -20,9 +21,9 @@ interface ConverterInterface
      * @throws NumberFormatException
      */
     public function convert(
-        float|int|string $amount,
-        float|int $fromRate,
-        float|int $toRate,
+        int|string $amount,
+        int|string $fromRate,
+        int|string $toRate,
         int|null $scale = null
-    ): float;
+    ): Number;
 }

@@ -10,13 +10,11 @@ use Hennest\ExchangeRate\Contracts\ResponseInterface;
 
 final class ApiData implements ApiInterface
 {
-    public function __construct(protected ResponseAssemblerInterface $responseAssembler)
-    {
-    }
+    public string $baseCurrency = 'usd';
 
-    public function baseCurrency(): string
-    {
-        return 'usd';
+    public function __construct(
+        protected ResponseAssemblerInterface $responseAssembler
+    ) {
     }
 
     public function fetch(): ResponseInterface

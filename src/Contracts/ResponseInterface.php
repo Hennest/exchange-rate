@@ -18,19 +18,25 @@ interface ResponseInterface extends Arrayable, Castable, Jsonable, JsonSerializa
     /**
      * Get the base currency code.
      */
-    public function baseCurrency(): string;
+    public string $baseCurrency {
+        get;
+    }
 
     /**
      * Get the date for the exchange rate information.
      */
-    public function date(): Carbon;
+    public Carbon $date {
+        get;
+    }
 
     /**
-     * Get the exchange rates as an associative array with currency codes in uppercase.
+     * Get the exchange rates as an associative array with currency codes.
      *
-     * @return float[]|int[]
+     * @var float[]|int[]
      */
-    public function rates(): array;
+    public array $rates {
+        get;
+    }
 
     /**
      * Get the class name for casting this object using a custom cast.

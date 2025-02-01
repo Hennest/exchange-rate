@@ -8,7 +8,7 @@ use Hennest\ExchangeRate\Providers\ExchangeRateServiceProvider;
 use Hennest\ExchangeRate\Tests\Fixtures\ApiData;
 use Orchestra\Testbench\TestCase;
 
-class ExchangeRateTestCase extends TestCase
+abstract class ExchangeRateTestCase extends TestCase
 {
     protected function getPackageProviders($app): array
     {

@@ -23,7 +23,7 @@ interface CacheInterface
      *
      * @param int|null $ttl (Optional) The cache lifetime in seconds for the stored value.
      */
-    public function put(string $cacheKey, mixed $value, ?int $ttl = null): bool;
+    public function put(string $cacheKey, mixed $value, null|int $ttl = null): bool;
 
     /**
      * Removes a cached value for the specified cache key.
@@ -37,5 +37,5 @@ interface CacheInterface
      *
      * @param int|null $ttl (Optional) The cache lifetime in seconds for the stored or retrieved value.
      */
-    public function remember(string $cacheKey, Closure $callback, ?int $ttl = null): mixed;
+    public function remember(string $cacheKey, Closure $callback, null|int $ttl = null): mixed;
 }

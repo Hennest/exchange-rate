@@ -31,7 +31,7 @@ final readonly class CacheService implements CacheInterface
         );
     }
 
-    public function put(string $cacheKey, mixed $value, ?int $ttl = null): bool
+    public function put(string $cacheKey, mixed $value, null|int $ttl = null): bool
     {
         return $this->cache->put(
             key: $this->cacheKey($cacheKey),
@@ -50,7 +50,7 @@ final readonly class CacheService implements CacheInterface
     /**
      * @param Closure(): array<string, string> $callback
      */
-    public function remember(string $cacheKey, Closure $callback, ?int $ttl = null): mixed
+    public function remember(string $cacheKey, Closure $callback, null|int $ttl = null): mixed
     {
         return $this->cache->remember(
             key: $this->cacheKey($cacheKey),

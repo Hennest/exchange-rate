@@ -15,27 +15,28 @@ use Illuminate\Support\Carbon;
  */
 final class CurrencyBeaconApiService implements ApiInterface
 {
-    private const API_URL_TEMPLATE = 'https://api.currencybeacon.com/v1/latest?base=%s&api_key=%s';
+    private const string API_URL_TEMPLATE = 'https://api.currencybeacon.com/v1/latest?base=%s&api_key=%s';
+
+    protected string $buildApiUrl {
+        get => sprintf(
+            self::API_URL_TEMPLATE,
+            $this->baseCurrency,
+            $this->apiKey,
+        );
+    }
 
     public function __construct(
         private readonly HttpFactory $http,
         private readonly ResponseAssemblerInterface $responseAssembler,
-        private readonly string $baseCurrency,
+        private(set) readonly string $baseCurrency,
         private readonly string $apiKey,
     ) {
-    }
-
-    public function baseCurrency(): string
-    {
-        return mb_strtolower(
-            $this->baseCurrency
-        );
     }
 
     public function fetch(): ResponseInterface
     {
         $response = (array) $this->http
-            ->get($this->buildApiUrl())
+            ->get($this->buildApiUrl)
             ->throw()
             ->json();
 
@@ -51,15 +52,6 @@ final class CurrencyBeaconApiService implements ApiInterface
             baseCurrency: $responseData['base'],
             date: new Carbon($responseData['date']),
             rates: $responseData['rates']
-        );
-    }
-
-    private function buildApiUrl(): string
-    {
-        return sprintf(
-            self::API_URL_TEMPLATE,
-            $this->baseCurrency(),
-            $this->apiKey,
         );
     }
 }

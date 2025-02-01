@@ -22,10 +22,7 @@ it('returns exchange rates', function (): void {
 
 it('returns exchange rates from cache if available', function (): void {
     $apiData = new class implements ApiInterface {
-        public function baseCurrency(): string
-        {
-            return 'USD';
-        }
+        public string $baseCurrency = 'USD';
 
         public function fetch(): ResponseInterface
         {
@@ -88,5 +85,5 @@ it('can convert exchange rate for currencies', function (): void {
         toCurrency: 'eur',
     );
 
-    expect($result)->toBe(1.64);
+    expect($result->value)->toBe('1.64');
 })->group('exchangeService');

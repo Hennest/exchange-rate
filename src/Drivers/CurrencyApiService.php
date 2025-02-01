@@ -15,41 +15,35 @@ use Illuminate\Support\Carbon;
  */
 final class CurrencyApiService implements ApiInterface
 {
-    private const API_URL_TEMPLATE = 'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/%s.min.json';
+    private const string API_URL_TEMPLATE = 'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/%s.min.json';
+
+    protected string $buildApiUrl {
+        get => sprintf(
+            self::API_URL_TEMPLATE,
+            $this->baseCurrency,
+        );
+    }
 
     public function __construct(
         private readonly HttpFactory $http,
         private readonly ResponseAssemblerInterface $responseAssembler,
-        private readonly string $baseCurrency,
+        private(set) readonly string $baseCurrency,
     ) {
-    }
-
-    public function baseCurrency(): string
-    {
-        return mb_strtolower(
-            $this->baseCurrency
-        );
     }
 
     public function fetch(): ResponseInterface
     {
         $response = (array) $this->http
-            ->get($this->buildApiUrl())
+            ->get($this->buildApiUrl)
             ->throw()
             ->json();
 
-        return $this->responseAssembler->create(
-            baseCurrency: array_keys($response)[1],
-            date: new Carbon($response['date']),
-            rates: $response[$this->baseCurrency()]
-        );
-    }
+        $baseCurrency = array_keys($response)[1];
 
-    private function buildApiUrl(): string
-    {
-        return sprintf(
-            self::API_URL_TEMPLATE,
-            $this->baseCurrency(),
+        return $this->responseAssembler->create(
+            baseCurrency: $baseCurrency,
+            date: new Carbon($response['date']),
+            rates: $response[$baseCurrency]
         );
     }
 }

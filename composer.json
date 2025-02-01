@@ -21,14 +21,15 @@
         }
     },
     "require": {
-        "php": "^8.2",
-        "guzzlehttp/guzzle": "^7.8"
+        "php": "^8.4",
+        "guzzlehttp/guzzle": "^7.8",
+        "ext-bcmath": "*"
     },
     "require-dev": {
-        "laravel/pint": "^1.16",
-        "orchestra/testbench": "^8.23",
-        "pestphp/pest": "^2.34",
-        "phpstan/phpstan": "^1.11"
+        "laravel/pint": "^1.2",
+        "orchestra/testbench": "^9.90",
+        "pestphp/pest": "^3.7.4",
+        "phpstan/phpstan": "^2.1.2"
     },
     "scripts": {
         "stan": [

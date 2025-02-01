@@ -12,7 +12,9 @@ interface ApiInterface
     /**
      * Get the base currency code.
      */
-    public function baseCurrency(): string;
+    public string $baseCurrency {
+        get;
+    }
 
     /**
      * Fetch exchange rate data from the API.

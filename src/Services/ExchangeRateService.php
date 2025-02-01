@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hennest\ExchangeRate\Services;
 
+use BcMath\Number;
 use Hennest\ExchangeRate\Contracts\ApiInterface;
 use Hennest\ExchangeRate\Contracts\CacheInterface;
 use Hennest\ExchangeRate\Contracts\ConverterInterface;
@@ -22,11 +23,13 @@ final readonly class ExchangeRateService implements ExchangeRateInterface
 
     public function rates(array|null $currencies = null): array
     {
-        if ( ! $rates = $this->cache->get($this->api->baseCurrency())) {
+        $baseCurrency = $this->convertCase($this->api->baseCurrency);
+
+        if ( ! $rates = $this->cache->get($baseCurrency)) {
             $response = $this->api->fetch();
 
             $this->cache->put(
-                cacheKey: $this->api->baseCurrency(),
+                cacheKey: $baseCurrency,
                 value: $response
             );
 
@@ -42,27 +45,30 @@ final readonly class ExchangeRateService implements ExchangeRateInterface
     public function getRate(string $currency): float
     {
         return (float) $this->rates([$currency])[
-            $this->transformCase($currency)
+            $this->convertCase($currency)
         ];
     }
 
-    public function convert(float|int|string $amount, string $fromCurrency, string $toCurrency, int|null $scale = null): float
+    public function convert(Number|int|string $amount, string $fromCurrency, string $toCurrency, int|null $scale = null): Number
     {
         $rates = $this->rates([
-            $fromCurrency = $this->transformCase($fromCurrency),
-            $toCurrency = $this->transformCase($toCurrency)
+            $fromCurrency = $this->convertCase($fromCurrency),
+            $toCurrency = $this->convertCase($toCurrency),
         ]);
 
         return $this->converter->convert(
-            amount: $amount,
-            fromRate: $rates[$fromCurrency],
-            toRate: $rates[$toCurrency],
+            amount: (string) $amount,
+            fromRate: (string) $rates[$fromCurrency],
+            toRate: (string) $rates[$toCurrency],
             scale: $scale
         );
     }
 
-    private function transformCase(string $currency): string
+    private function convertCase(string $currency): string
     {
-        return mb_strtoupper($currency);
+        return match (true) {
+            0 === $this->parser->case => mb_strtolower($currency),
+            default => mb_strtoupper($currency),
+        };
     }
 }

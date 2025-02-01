@@ -75,19 +75,19 @@ final class ExchangeRateServiceProvider extends ServiceProvider
 
         $this->setupConverterService(
             converterClass: $services['converter'] ?? ConverterService::class,
-            mathScale: (int) ($config['math']['scale'] ?? 10),
+            mathScale: (string) ($config['math']['scale'] ?? 10),
         );
 
         $this->setupParserService(
             parserClass: $services['parser'] ?? ParserService::class,
-            toCase: $config['parser_case'] ?? CASE_UPPER
+            case: (string) $config['parser_case'] ?? CASE_UPPER
         );
 
         $this->setupCacheService(
             cacheClass: $services['cache'] ?? CacheService::class,
             store: $config['cache']['driver'] ?? 'array',
             prefix: $config['cache']['prefix'] ?? 'exchange_rate',
-            ttl: (int) $config['cache']['ttl'] ?? (6 * 3600),
+            ttl: (string) $config['cache']['ttl'] ?? (6 * 3600),
         );
 
         $this->setupApiService(
@@ -104,7 +104,7 @@ final class ExchangeRateServiceProvider extends ServiceProvider
     /**
      * @param class-string<ConverterInterface> $converterClass
      */
-    public function setupConverterService(string $converterClass, int $mathScale): void
+    public function setupConverterService(string $converterClass, string $mathScale): void
     {
         $this->app->when($converterClass)
             ->needs('$scale')
@@ -119,11 +119,11 @@ final class ExchangeRateServiceProvider extends ServiceProvider
     /**
      * @param class-string<ParserInterface> $parserClass
      */
-    public function setupParserService(string $parserClass, int $toCase): void
+    public function setupParserService(string $parserClass, string $case): void
     {
         $this->app->when($parserClass)
-            ->needs('$toCase')
-            ->give($toCase);
+            ->needs('$case')
+            ->give($case);
 
         $this->app->singleton(
             abstract: ParserInterface::class,
@@ -134,7 +134,7 @@ final class ExchangeRateServiceProvider extends ServiceProvider
     /**
      * @param class-string<CacheInterface> $cacheClass
      */
-    private function setupCacheService(string $cacheClass, string $store, string $prefix, int $ttl): void
+    private function setupCacheService(string $cacheClass, string $store, string $prefix, string $ttl): void
     {
         $this->app->when($cacheClass)
             ->needs(CacheContract::class)
@@ -207,7 +207,7 @@ final class ExchangeRateServiceProvider extends ServiceProvider
      *     exchange_rate: class-string<ExchangeRateInterface>|null,
      * }
      */
-    public function getServices(array $config): array
+    private function getServices(array $config): array
     {
         return $config['drivers'][$config['default_driver']] ?? $config['services'];
     }

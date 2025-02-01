@@ -14,28 +14,10 @@ final readonly class Response implements ResponseInterface
      * @param float[]|int[] $rates
      */
     public function __construct(
-        private string $baseCurrency,
-        private Carbon $date,
-        private array $rates,
+        private(set) string $baseCurrency,
+        private(set) Carbon $date,
+        private(set) array $rates,
     ) {
-    }
-
-    public function baseCurrency(): string
-    {
-        return $this->baseCurrency;
-    }
-
-    public function date(): Carbon
-    {
-        return $this->date;
-    }
-
-    /**
-     * @return float[]|int[]
-     */
-    public function rates(): array
-    {
-        return $this->rates;
     }
 
     /**
@@ -54,7 +36,7 @@ final readonly class Response implements ResponseInterface
         return [
             'base' => $this->baseCurrency,
             'date' => $this->date->toDateTimeString(),
-            'rates' => $this->rates
+            'rates' => $this->rates,
         ];
     }
 

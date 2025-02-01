@@ -8,6 +8,10 @@ use Hennest\ExchangeRate\Exceptions\InvalidCurrencyException;
 
 interface ParserInterface
 {
+    public int $case {
+        get;
+    }
+
     /**
      * Parse exchange rate data for the specified currencies.
      *

@@ -35,7 +35,6 @@ return [
      * Storage of the state of the exchange rates.
      *
      * Supported drivers: same as laravel cache
-     *
      */
     'cache' => [
         'prefix' => env('EXCHANGE_RATE_CACHE_PREFIX', 'exchange_rate'),

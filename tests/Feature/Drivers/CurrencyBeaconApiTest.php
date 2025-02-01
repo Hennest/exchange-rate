@@ -25,7 +25,7 @@ it('fetches exchange rate with valid currency', function (): void {
                 'usd' => 1.0,
                 'eur' => 0.82,
                 'gbp' => 0.72,
-            ]
+            ],
         ],
     ])]);
 

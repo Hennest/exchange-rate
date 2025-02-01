@@ -24,7 +24,7 @@ it('returns correct format', function (): void {
 })->group('exchangeParser');
 
 it('returns the correct case for currency keys', function (): void {
-    app()->when(ParserService::class)->needs('$toCase')->give(CASE_LOWER);
+    app()->when(ParserService::class)->needs('$case')->give(CASE_LOWER);
 
     $exchangeRateApi = app(ApiInterface::class);
     $exchangeRateParser = app(ParserInterface::class);
@@ -65,7 +65,7 @@ it('throws exception when currency is unavailable', function (): void {
     expect(fn () => $exchangeRateParser->parse($exchangeRateApi->fetch(), $toCurrencies))->toThrow(
         exception: InvalidCurrencyException::class,
         exceptionMessage: sprintf(
-            "Exchange rate data for currencies '%s' is not available.",
+            "Exchange rate data for currencies [%s] is not available.",
             implode(', ', $toCurrencies)
         )
     );

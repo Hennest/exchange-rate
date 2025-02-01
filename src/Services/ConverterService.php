@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Hennest\ExchangeRate\Services;
 
-use Brick\Math\BigDecimal;
-use Brick\Math\RoundingMode;
+use BcMath\Number;
 use Hennest\ExchangeRate\Contracts\ConverterInterface;
 
 final readonly class ConverterService implements ConverterInterface
@@ -17,21 +16,13 @@ final readonly class ConverterService implements ConverterInterface
 
     public function convert(
         float|int|string $amount,
-        float|int $fromRate,
-        float|int $toRate,
+        float|int|string $fromRate,
+        float|int|string $toRate,
         int|null $scale = null
-    ): float {
-        return BigDecimal::of($toRate)
-            ->dividedBy(
-                that: $fromRate,
-                scale: $scale ?? $this->scale,
-                roundingMode: RoundingMode::HALF_UP
-            )
-            ->multipliedBy($amount)
-            ->toScale(
-                scale: $scale ?? $this->scale,
-                roundingMode: RoundingMode::HALF_UP
-            )
-            ->toFloat();
+    ): Number {
+        return new Number((string) $toRate)
+            ->div((string) $fromRate)
+            ->mul((string) $amount)
+            ->round($scale ?? $this->scale);
     }
 }
