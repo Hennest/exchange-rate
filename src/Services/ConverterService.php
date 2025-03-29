@@ -20,9 +20,16 @@ final readonly class ConverterService implements ConverterInterface
         float|int|string $toRate,
         int|null $scale = null
     ): Number {
-        return new Number((string) $toRate)
-            ->div((string) $fromRate)
-            ->mul((string) $amount)
-            ->round($scale ?? $this->scale);
+        $scale = $scale ?? $this->scale;
+
+        return new Number($this->format((float) $toRate, $scale))
+            ->div($this->format((float) $fromRate, $scale))
+            ->mul($this->format((float) $amount, $scale))
+            ->round($scale);
+    }
+
+    private function format(float $value, int $scale): string
+    {
+        return number_format($value, $scale, thousands_separator: '');
     }
 }

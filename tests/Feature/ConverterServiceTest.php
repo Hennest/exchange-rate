@@ -42,3 +42,16 @@ it('can convert exchange rates with custom scale', function (): void {
 
     expect($result->value)->toBe('3.941');
 })->group('exchangeConverter');
+
+it('can convert exchange rates with very small amount', function (): void {
+    $exchangeRateConverter = app(ConverterInterface::class);
+
+    $result = $exchangeRateConverter->convert(
+        amount: 0.005,
+        fromRate: 0.00239,
+        toRate: 0.0000022,
+        scale: 10
+    );
+
+    expect($result->value)->toBe('0.0000046025');
+})->group('exchangeConverter');

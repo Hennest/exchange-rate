@@ -83,6 +83,7 @@ it('can convert exchange rate for currencies', function (): void {
         amount: 2,
         fromCurrency: 'usd',
         toCurrency: 'eur',
+        scale: 2
     );
 
     expect($result->value)->toBe('1.64');
