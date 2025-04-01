@@ -17,10 +17,10 @@ final class CurrencyApiService implements ApiInterface
 {
     private const string API_URL_TEMPLATE = 'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/%s.min.json';
 
-    private string $buildApiUrl {
+    protected string $buildApiUrl {
         get => sprintf(
             self::API_URL_TEMPLATE,
-            $this->baseCurrency,
+            strtolower($this->baseCurrency),
         );
     }
 

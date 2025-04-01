@@ -170,7 +170,7 @@ final class ExchangeRateServiceProvider extends ServiceProvider
     {
         $this->app->when($apiClass)
             ->needs('$baseCurrency')
-            ->give(strtolower($baseCurrency));
+            ->give($baseCurrency);
 
         $this->app->when($apiClass)
             ->needs('$apiKey')

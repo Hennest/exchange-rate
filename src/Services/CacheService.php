@@ -61,6 +61,6 @@ final readonly class CacheService implements CacheInterface
 
     private function cacheKey(string $cacheKey): string
     {
-        return mb_strtolower($this->prefix . "." . $cacheKey);
+        return mb_strtolower("{$this->prefix}.{$cacheKey}");
     }
 }
