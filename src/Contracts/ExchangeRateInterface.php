@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Hennest\ExchangeRate\Contracts;
 
 use BcMath\Number;
-use Brick\Math\Exception\MathException;
 use Hennest\ExchangeRate\Exceptions\InvalidCurrencyException;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
@@ -42,7 +41,6 @@ interface ExchangeRateInterface
      *
      * @throws ConnectionException If the request to the API fails.
      * @throws InvalidCurrencyException If an invalid currency code is provided.
-     * @throws MathException If a mathematical operation fails during conversion.
      * @throws RequestException If the request to the API fails.
      */
     public function convert(Number|int|string $amount, string $fromCurrency, string $toCurrency, null|int $scale = null): Number;

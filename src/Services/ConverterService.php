@@ -10,7 +10,7 @@ use Hennest\ExchangeRate\Contracts\ConverterInterface;
 final readonly class ConverterService implements ConverterInterface
 {
     public function __construct(
-        private int $scale,
+        private(set) int $scale,
     ) {
     }
 

@@ -16,21 +16,21 @@ use JsonSerializable;
 interface ResponseInterface extends Arrayable, Castable, Jsonable, JsonSerializable
 {
     /**
-     * Get the base currency code.
+     * The base currency code.
      */
     public string $baseCurrency {
         get;
     }
 
     /**
-     * Get the date for the exchange rate information.
+     * The date for the exchange rate information.
      */
     public Carbon $date {
         get;
     }
 
     /**
-     * Get the exchange rates as an associative array with currency codes.
+     * The exchange rates as an associative array with currency codes.
      *
      * @var float[]|int[]
      */

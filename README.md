@@ -8,6 +8,7 @@ This PHP library provides a flexible and efficient way to handle exchange rates,
 - Cache exchange rates for improved performance
 - Parse and filter exchange rate data
 - Perform currency conversions with configurable precision
+- Dedicated converter service with arbitrary precision math
 - Easily extensible and customizable
 - Laravel integration via a service provider
 
@@ -64,7 +65,7 @@ class ExampleController
         // Convert currency
         $convertedAmount = $this->exchangeRate->convert(100, 'USD', 'EUR');
     }
-    
+
     public function anotherExample()
     {
         // Get exchange rates for specific currencies
@@ -113,6 +114,7 @@ return [
         'api' => Hennest\ExchangeRate\Drivers\CurrencyApiService::class,
         'cache' => Hennest\ExchangeRate\Services\CacheService::class,
         'parser' => Hennest\ExchangeRate\Services\ParserService::class,
+        'converter' => Hennest\ExchangeRate\Services\ConverterService::class,
         'exchange_rate' => Hennest\ExchangeRate\Services\ExchangeRateService::class,
     ],
 
@@ -135,7 +137,7 @@ return [
 
 - `base_currency`: Set your preferred base currency (default: USD).
 - `api_key`: If your chosen API requires a key, set it here or in your `.env` file.
-- `math.scale`: Set the precision for decimal calculations.
+- `math.scale`: Set the precision for decimal calculations used by the converter.
 - `cache`: Configure caching options including driver, prefix, and TTL.
 - `services`: Override default service implementations.
 - `default_driver`: Choose the default API driver.
@@ -148,6 +150,7 @@ You can set `default_driver` to `null` and update the `services` array to extend
 - `ApiInterface`: For custom API integrations
 - `CacheInterface`: For custom caching mechanisms
 - `ParserInterface`: For custom parsing logic
+- `ConverterInterface`: For custom currency conversion logic
 - `ExchangeRateInterface`: For custom exchange rate calculations
 
 Register your custom implementations in the `services` section of the `config/exchange-rate.php` file:
@@ -157,6 +160,7 @@ Register your custom implementations in the `services` section of the `config/ex
     'api' => \App\Services\MyCustomApiService::class,
     'cache' => \App\Services\MyCustomCacheService::class,
     'parser' => \App\Services\MyCustomParserService::class,
+    'converter' => \App\Services\MyCustomConverterService::class,
     'exchange_rate' => \App\Services\MyCustomExchangeRateService::class,
 ],
 ```

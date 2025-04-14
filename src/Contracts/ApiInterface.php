@@ -10,7 +10,7 @@ use Illuminate\Http\Client\RequestException;
 interface ApiInterface
 {
     /**
-     * Get the base currency code.
+     * The base currency code.
      */
     public string $baseCurrency {
         get;

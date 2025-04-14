@@ -42,4 +42,12 @@ final readonly class ParserService implements ParserInterface
 
         return array_intersect_key($exchangeRates, $currencies);
     }
+
+    public function convertCase(string $currency): string
+    {
+        return match ($this->case) {
+            0 => mb_strtolower($currency),
+            default => mb_strtoupper($currency),
+        };
+    }
 }

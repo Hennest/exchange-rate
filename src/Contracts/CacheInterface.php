@@ -9,6 +9,20 @@ use Closure;
 interface CacheInterface
 {
     /**
+     * The cache prefix.
+     */
+    public string $prefix {
+        get;
+    }
+
+    /**
+     * The cache lifetime in seconds.
+     */
+    public int $ttl {
+        get;
+    }
+
+    /**
      * Checks if the specified cache key exists in the cache.
      */
     public function exist(string $cacheKey): bool;

@@ -5,25 +5,23 @@ declare(strict_types=1);
 namespace Hennest\ExchangeRate\Contracts;
 
 use BcMath\Number;
-use Brick\Math\Exception\DivisionByZeroException;
-use Brick\Math\Exception\MathException;
-use Brick\Math\Exception\NumberFormatException;
-use Brick\Math\Exception\RoundingNecessaryException;
 
 interface ConverterInterface
 {
     /**
+     * The scale for the result of the conversion.
+     */
+    public int $scale {
+        get;
+    }
+
+    /**
      * Converts an amount from one currency to another.
-     *
-     * @throws RoundingNecessaryException
-     * @throws DivisionByZeroException
-     * @throws MathException
-     * @throws NumberFormatException
      */
     public function convert(
-        int|string $amount,
-        int|string $fromRate,
-        int|string $toRate,
+        float|int|string $amount,
+        float|int|string $fromRate,
+        float|int|string $toRate,
         int|null $scale = null
     ): Number;
 }

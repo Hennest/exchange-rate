@@ -23,7 +23,7 @@ final readonly class ExchangeRateService implements ExchangeRateInterface
 
     public function rates(array|null $currencies = null): array
     {
-        $baseCurrency = $this->convertCase($this->api->baseCurrency);
+        $baseCurrency = $this->parser->convertCase($this->api->baseCurrency);
 
         if ( ! $rates = $this->cache->get($baseCurrency)) {
             $response = $this->api->fetch();
@@ -45,15 +45,15 @@ final readonly class ExchangeRateService implements ExchangeRateInterface
     public function getRate(string $currency): float
     {
         return (float) $this->rates([$currency])[
-            $this->convertCase($currency)
+            $this->parser->convertCase($currency)
         ];
     }
 
     public function convert(Number|int|string $amount, string $fromCurrency, string $toCurrency, int|null $scale = null): Number
     {
         $rates = $this->rates([
-            $fromCurrency = $this->convertCase($fromCurrency),
-            $toCurrency = $this->convertCase($toCurrency),
+            $fromCurrency = $this->parser->convertCase($fromCurrency),
+            $toCurrency = $this->parser->convertCase($toCurrency),
         ]);
 
         return $this->converter->convert(
@@ -62,13 +62,5 @@ final readonly class ExchangeRateService implements ExchangeRateInterface
             toRate: (string) $rates[$toCurrency],
             scale: $scale
         );
-    }
-
-    private function convertCase(string $currency): string
-    {
-        return match (true) {
-            0 === $this->parser->case => mb_strtolower($currency),
-            default => mb_strtoupper($currency),
-        };
     }
 }

@@ -8,6 +8,9 @@ use Hennest\ExchangeRate\Exceptions\InvalidCurrencyException;
 
 interface ParserInterface
 {
+    /**
+     * The case for the currency keys.
+     */
     public int $case {
         get;
     }
@@ -22,4 +25,9 @@ interface ParserInterface
      * @throws InvalidCurrencyException If an invalid or unsupported currency code is provided.
      */
     public function parse(ResponseInterface $response, array|null $toCurrencies = null): array;
+
+    /**
+     * Convert the currency code to the specified case.
+     */
+    public function convertCase(string $currency): string;
 }
