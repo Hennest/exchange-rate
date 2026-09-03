@@ -12,7 +12,7 @@ use Illuminate\Http\Client\Response;
 
 final class ApiFailedData implements ApiInterface
 {
-    public function __construct(protected ResponseAssemblerInterface $responseAssembler)
+    public function __construct(private ResponseAssemblerInterface $responseAssembler)
     {
     }
 

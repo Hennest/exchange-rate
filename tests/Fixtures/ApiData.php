@@ -13,7 +13,7 @@ final class ApiData implements ApiInterface
     public string $baseCurrency = 'usd';
 
     public function __construct(
-        protected ResponseAssemblerInterface $responseAssembler
+        private ResponseAssemblerInterface $responseAssembler
     ) {
     }
 

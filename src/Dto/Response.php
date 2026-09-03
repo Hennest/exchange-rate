@@ -14,9 +14,9 @@ final readonly class Response implements ResponseInterface
      * @param float[]|int[] $rates
      */
     public function __construct(
-        private(set) string $baseCurrency,
-        private(set) Carbon $date,
-        private(set) array $rates,
+        public private(set) string $baseCurrency,
+        public private(set) Carbon $date,
+        public private(set) array $rates,
     ) {
     }
 

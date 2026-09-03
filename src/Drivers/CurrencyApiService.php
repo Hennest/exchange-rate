@@ -17,7 +17,7 @@ final class CurrencyApiService implements ApiInterface
 {
     private const string API_URL_TEMPLATE = 'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/%s.min.json';
 
-    protected string $buildApiUrl {
+    private string $buildApiUrl {
         get => sprintf(
             self::API_URL_TEMPLATE,
             strtolower($this->baseCurrency),
@@ -27,7 +27,7 @@ final class CurrencyApiService implements ApiInterface
     public function __construct(
         private readonly HttpFactory $http,
         private readonly ResponseAssemblerInterface $responseAssembler,
-        private(set) readonly string $baseCurrency,
+        public private(set) readonly string $baseCurrency,
     ) {
     }
 

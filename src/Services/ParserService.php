@@ -11,7 +11,7 @@ use Hennest\ExchangeRate\Exceptions\InvalidCurrencyException;
 final readonly class ParserService implements ParserInterface
 {
     public function __construct(
-        private(set) int $case
+        public private(set) int $case
     ) {
     }
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hennest\ExchangeRate\Contracts;
 
 use Illuminate\Contracts\Database\Eloquent\Castable;
+use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Carbon;
@@ -42,6 +43,7 @@ interface ResponseInterface extends Arrayable, Castable, Jsonable, JsonSerializa
      * Get the class name for casting this object using a custom cast.
      *
      * @param array<string, mixed> $arguments
+     * @return class-string<CastsAttributes<ResponseInterface, ResponseInterface>>
      */
     public static function castUsing(array $arguments): string;
 

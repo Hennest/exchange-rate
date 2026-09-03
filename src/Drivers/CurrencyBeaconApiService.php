@@ -17,7 +17,7 @@ final class CurrencyBeaconApiService implements ApiInterface
 {
     private const string API_URL_TEMPLATE = 'https://api.currencybeacon.com/v1/latest?base=%s&api_key=%s';
 
-    protected string $buildApiUrl {
+    private string $buildApiUrl {
         get => sprintf(
             self::API_URL_TEMPLATE,
             strtolower($this->baseCurrency),
@@ -28,7 +28,7 @@ final class CurrencyBeaconApiService implements ApiInterface
     public function __construct(
         private readonly HttpFactory $http,
         private readonly ResponseAssemblerInterface $responseAssembler,
-        private(set) readonly string $baseCurrency,
+        public private(set) readonly string $baseCurrency,
         private readonly string $apiKey,
     ) {
     }

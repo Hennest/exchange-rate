@@ -12,8 +12,8 @@ final readonly class CacheService implements CacheInterface
 {
     public function __construct(
         private CacheContract $cache,
-        private(set) string $prefix,
-        private(set) int $ttl
+        public private(set) string $prefix,
+        public private(set) int $ttl
     ) {
     }
 

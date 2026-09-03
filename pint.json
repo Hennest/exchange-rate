@@ -59,9 +59,6 @@
     "trim_array_spaces": true,
     "use_arrow_functions": true,
     "void_return": true,
-    "yoda_style": true
-  },
-  "notPath": [
-    "rector.php"
-  ]
+    "yoda_style": false
+  }
 }
